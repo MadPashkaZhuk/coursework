@@ -21,7 +21,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 
-	implementation 'org.postgresql:postgresql:42.6.0'
+	implementation 'org.postgresql:postgresql'
 	implementation 'org.liquibase:liquibase-core:4.24.0'
 	implementation 'com.fasterxml.jackson.core:jackson-core:2.16.0-rc1'
 	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.16.0-rc1'
