@@ -36,8 +36,7 @@ public class ApplicationExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ExceptionDto> handleDataIntegrityViolation(DataIntegrityViolationException exception) {
-        ExceptionDto exceptionDto =
-                new ExceptionDto(HttpStatus.CONFLICT,
+        ExceptionDto exceptionDto = new ExceptionDto(HttpStatus.CONFLICT,
                         messageSourceWrapper.getMessageCode(ApiMessageEnum.DATA_VIOLATION),
                         errorCodeHelper.getCode(ErrorCodeEnum.DATA_VIOLATION_CODE));
         return new ResponseEntity<>(exceptionDto, HttpStatus.CONFLICT);
@@ -53,9 +52,7 @@ public class ApplicationExceptionHandler {
 
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ExceptionDto> handleUnexpectedExceptions(Throwable exception) {
-        System.out.println(exception.getClass());
-        ExceptionDto exceptionDto =
-                new ExceptionDto(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage(),
+        ExceptionDto exceptionDto = new ExceptionDto(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage(),
                         errorCodeHelper.getCode(ErrorCodeEnum.UNKNOWN_ERROR_CODE));
         return new ResponseEntity<>(exceptionDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }

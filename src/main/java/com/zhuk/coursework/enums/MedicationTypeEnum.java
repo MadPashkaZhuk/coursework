@@ -4,5 +4,5 @@ public enum MedicationTypeEnum {
     VACCINE,
     PEN,
     INJECTION,
-    PILLS;
+    PILLS
 }
