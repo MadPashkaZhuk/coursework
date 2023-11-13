@@ -1,0 +1,89 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-medication
+      author: Paul
+      changes:
+        - insert:
+            tableName: medication
+            columns:
+              - column:
+                  name: name
+                  value: 'Comirnaty'
+              - column:
+                  name: manufacturer
+                  value: 'Pfizer'
+              - column:
+                  name: type
+                  value: 'VACCINE'
+              - column:
+                  name: weight
+                  value: 40
+              - column:
+                  name: require_prescription
+                  value: 0
+              - column:
+                  name: additional_info
+                  value: 'Vaccine for Covid 19'
+        - insert:
+            tableName: medication
+            columns:
+              - column:
+                  name: name
+                  value: 'Humira'
+              - column:
+                  name: manufacturer
+                  value: 'AbbVie'
+              - column:
+                  name: type
+                  value: 'PEN'
+              - column:
+                  name: weight
+                  value: 40
+              - column:
+                  name: require_prescription
+                  value: 1
+              - column:
+                  name: additional_info
+                  value: 'Require medication guide'
+        - insert:
+            tableName: medication
+            columns:
+              - column:
+                  name: name
+                  value: 'Spikevax'
+              - column:
+                  name: manufacturer
+                  value: 'Moderna'
+              - column:
+                  name: type
+                  value: 'VACCINE'
+              - column:
+                  name: weight
+                  value: 100
+              - column:
+                  name: require_prescription
+                  value: 0
+              - column:
+                  name: additional_info
+                  value: 'Vaccine for Covid 19'
+        - insert:
+            tableName: medication
+            columns:
+              - column:
+                  name: name
+                  value: 'Keytruda'
+              - column:
+                  name: manufacturer
+                  value: 'Merck'
+              - column:
+                  name: type
+                  value: 'INJECTION'
+              - column:
+                  name: weight
+                  value: 100
+              - column:
+                  name: require_prescription
+                  value: 1
+              - column:
+                  name: additional_info
+                  value: 'Described for cancer'

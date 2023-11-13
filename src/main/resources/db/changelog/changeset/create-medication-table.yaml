@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-medication
+      author: Paul
+      changes:
+        - createTable:
+            tableName: medication
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: manufacturer
+                  type: varchar(128)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: weight
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: require_prescription
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: additional_info
+                  type: varchar(256)
+

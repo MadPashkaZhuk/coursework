@@ -1,0 +1,15 @@
+package com.zhuk.coursework.enums;
+
+import lombok.Getter;
+
+@Getter
+public enum ErrorCodeEnum {
+    MEDICATION_NOT_FOUND(7001),
+    USER_NOT_FOUND_CODE(8001),
+    DATA_VIOLATION_CODE(9001),
+    UNKNOWN_ERROR_CODE(9999);
+    private final int code;
+    ErrorCodeEnum(int code) {
+        this.code = code;
+    }
+}
