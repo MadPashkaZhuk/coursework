@@ -1,6 +1,7 @@
 package com.zhuk.coursework.repository;
 
 import com.zhuk.coursework.entity.MedicationEntity;
+import com.zhuk.coursework.enums.MedicationTypeEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,5 +14,7 @@ public interface MedicationRepository extends JpaRepository<MedicationEntity, Lo
             "m.weight = :weight, m.requirePrescription = :requirePrescription, m.additionalInfo = :additionalInfo " +
             "WHERE m.id = :id")
     void updateById(String name, String manufacturer, int weight, boolean requirePrescription, String additionalInfo,
-                    String type, Long id);
+                    MedicationTypeEnum type, Long id);
+
+    boolean existsByNameAndWeight(String name, int weight);
 }
