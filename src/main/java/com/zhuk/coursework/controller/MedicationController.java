@@ -50,12 +50,12 @@ public class MedicationController {
             @ApiResponse(responseCode = "403", description = "Only admin can add medication to database")
     })
     @PostMapping
-    public ResponseEntity<MedicationDto> saveMedication(@RequestBody NewMedicationDto newMedicationDto,
+    public ResponseEntity<MedicationDto> saveMedication(@RequestBody NewMedicationDto dto,
                                                         UriComponentsBuilder uriComponentsBuilder) {
-        MedicationDto dto = medicationService.saveMedication(newMedicationDto);
+        MedicationDto response = medicationService.saveMedication(dto);
         return ResponseEntity.created(uriComponentsBuilder.path("/api/medication/{id}")
-                        .build(Map.of("id", dto.getId())))
-                        .body(dto);
+                        .build(Map.of("id", response.getId())))
+                .body(response);
 
     }
 
@@ -76,15 +76,14 @@ public class MedicationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Medication provided is successfully updated"),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
-            @ApiResponse(responseCode = "404", description = "Medication with this is doesn't exists"),
             @ApiResponse(responseCode = "403", description = "Only admin can update medication in database")
     })
-    @PutMapping("/{id}")
-    public ResponseEntity<MedicationDto> updateMedication(@PathVariable("id") Long id,
-                                                          @RequestBody NewMedicationDto newMedicationDto,
+    @PutMapping
+    public ResponseEntity<MedicationDto> updateMedication(@RequestBody NewMedicationDto dto,
                                                           UriComponentsBuilder uriComponentsBuilder) {
+        MedicationDto response = medicationService.updateMedication(dto);
         return ResponseEntity.created(uriComponentsBuilder.path("/api/medication/{id}")
-                        .build(Map.of("id", id)))
-                .body(medicationService.updateMedication(newMedicationDto, id));
+                        .build(Map.of("id", response.getId())))
+                .body(response);
     }
 }

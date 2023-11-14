@@ -1,12 +1,10 @@
 package com.zhuk.coursework.advice;
 
 import com.zhuk.coursework.dto.ExceptionDto;
-import com.zhuk.coursework.enums.ApiMessageEnum;
 import com.zhuk.coursework.enums.ErrorCodeEnum;
 import com.zhuk.coursework.exception.BaseApiException;
 import com.zhuk.coursework.utils.ErrorCodeHelper;
-import com.zhuk.coursework.utils.MessageSourceWrapper;
-import org.springframework.dao.DataIntegrityViolationException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,13 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class ApplicationExceptionHandler {
     private final ErrorCodeHelper errorCodeHelper;
-    private final MessageSourceWrapper messageSourceWrapper;
-    public ApplicationExceptionHandler(ErrorCodeHelper errorCodeHelper, MessageSourceWrapper messageSourceWrapper) {
-        this.errorCodeHelper = errorCodeHelper;
-        this.messageSourceWrapper = messageSourceWrapper;
-    }
 
     @ExceptionHandler(BaseApiException.class)
     public ResponseEntity<ExceptionDto> handleBaseApiException(BaseApiException baseApiException) {
@@ -32,14 +26,6 @@ public class ApplicationExceptionHandler {
                 baseApiException.getMessage(),
                 baseApiException.getErrorCode());
         return new ResponseEntity<>(exceptionDto, baseApiException.getStatus());
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ExceptionDto> handleDataIntegrityViolation(DataIntegrityViolationException exception) {
-        ExceptionDto exceptionDto = new ExceptionDto(HttpStatus.CONFLICT,
-                        messageSourceWrapper.getMessageCode(ApiMessageEnum.DATA_VIOLATION),
-                        errorCodeHelper.getCode(ErrorCodeEnum.DATA_VIOLATION_CODE));
-        return new ResponseEntity<>(exceptionDto, HttpStatus.CONFLICT);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -57,4 +43,3 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(exceptionDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
-

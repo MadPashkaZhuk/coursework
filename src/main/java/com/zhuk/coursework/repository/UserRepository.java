@@ -13,7 +13,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByUsername(String username);
     void deleteByUsername(String username);
-
     @Modifying
     @Query("UPDATE UserEntity u SET u.username = :username, u.password = :password WHERE u.username = :oldUsername")
     void updateByUsername(@Param("oldUsername")String oldUsername, @Param("username") String username, @Param("password") String password);

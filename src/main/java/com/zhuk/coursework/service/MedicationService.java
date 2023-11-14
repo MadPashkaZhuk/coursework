@@ -38,13 +38,13 @@ public class MedicationService {
         return medicationMapper.map(getEntityByIdOrThrowException(id));
     }
 
-    public MedicationDto saveMedication(NewMedicationDto newMedicationDto) {
-        if(isMedicationExists(newMedicationDto.getName(), newMedicationDto.getWeight())) {
+    public MedicationDto saveMedication(NewMedicationDto dto) {
+        if(getOptionalEntityByNameAndWeight(dto.getName(), dto.getWeight()).isPresent()) {
             throw new MedicationAlreadyExistsException(HttpStatus.BAD_REQUEST,
                     messageSourceWrapper.getMessageCode(ApiMessageEnum.MEDICATION_ALREADY_EXISTS),
                     errorCodeHelper.getCode(ErrorCodeEnum.MEDICATION_ALREADY_EXISTS));
         }
-        MedicationEntity entity = medicationMapper.mapFromNewDto(newMedicationDto);
+        MedicationEntity entity = medicationMapper.mapFromNewDto(dto);
         return medicationMapper.map(medicationRepository.save(entity));
     }
 
@@ -54,24 +54,26 @@ public class MedicationService {
     }
 
     @Transactional
-    public MedicationDto updateMedication(NewMedicationDto newMedicationDto, Long id) {
-        getEntityByIdOrThrowException(id);
-        updateByIdFromNewMedicationDto(newMedicationDto, id);
-        MedicationEntity medication = medicationMapper.mapFromNewDto(newMedicationDto);
-        return medicationMapper.map(medication
-                .toBuilder()
-                .id(id)
-                .build());
+    public MedicationDto updateMedication(NewMedicationDto dto) {
+        Optional<MedicationEntity> entityOptional = getOptionalEntityByNameAndWeight(dto.getName(), dto.getWeight());
+        if(entityOptional.isEmpty()) {
+            return saveMedication(dto);
+        }
+        updateByNameAndWeight(dto);
+        Long id = entityOptional.get().getId();
+        MedicationEntity entity = medicationMapper.mapFromNewDto(dto).toBuilder().id(id).build();
+        return medicationMapper.map(entity);
+
     }
 
-    private void updateByIdFromNewMedicationDto(NewMedicationDto newMedicationDto, Long id) {
-        medicationRepository.updateById(newMedicationDto.getName(), newMedicationDto.getManufacturer(),
-                newMedicationDto.getWeight(), newMedicationDto.isRequirePrescription(),
-                newMedicationDto.getAdditionalInfo(), MedicationTypeEnum.valueOf(newMedicationDto.getType()), id);
+    private void updateByNameAndWeight(NewMedicationDto dto) {
+        medicationRepository.updateByNameAndWeight(dto.getName(), dto.getManufacturer(),
+                dto.getWeight(), dto.isRequirePrescription(),
+                dto.getAdditionalInfo(), MedicationTypeEnum.valueOf(dto.getType()));
     }
 
     private MedicationEntity getEntityByIdOrThrowException(Long id) {
-        Optional<MedicationEntity> medication = medicationRepository.findById(id);
+        Optional<MedicationEntity> medication = getOptionalEntityById(id);
         return medication.orElseThrow(
                 () -> new MedicationNotFoundException(HttpStatus.NOT_FOUND,
                         messageSourceWrapper.getMessageCode(ApiMessageEnum.MEDICATION_NOT_FOUND),
@@ -79,7 +81,11 @@ public class MedicationService {
         );
     }
 
-    private boolean isMedicationExists(String name, int weight) {
-        return medicationRepository.existsByNameAndWeight(name, weight);
+    private Optional<MedicationEntity> getOptionalEntityById(Long id) {
+        return medicationRepository.findById(id);
+    }
+
+    private Optional<MedicationEntity> getOptionalEntityByNameAndWeight(String name, int weight) {
+        return medicationRepository.getMedicationEntityByNameAndWeight(name, weight);
     }
 }
