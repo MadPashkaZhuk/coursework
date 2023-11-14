@@ -21,9 +21,4 @@ public class UserEntity {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
-
-    @ToString.Include(name = "password")
-    private String maskPassword() {
-        return "********";
-    }
 }
