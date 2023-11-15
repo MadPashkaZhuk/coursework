@@ -42,7 +42,7 @@ public class UserService {
     }
 
     public UserDto saveUser(CredentialsDto credentials) {
-        if(getOptionalEntityByUsername(credentials.getUsername()).isEmpty()) {
+        if(getOptionalEntityByUsername(credentials.getUsername()).isPresent()) {
             throw new UserAlreadyExistsException(HttpStatus.BAD_REQUEST,
                     messageSourceWrapper.getMessageCode(ApiMessageEnum.USER_ALREADY_EXISTS),
                     errorCodeHelper.getCode(ErrorCodeEnum.USER_ALREADY_EXISTS_CODE));
@@ -70,7 +70,7 @@ public class UserService {
         }
         UserEntity entity = user.get();
         userRepository.updateByUsername(entity.getUsername(), credentialsDto.getUsername(),
-                String.valueOf(credentialsDto.getPassword()));
+                passwordEncoder.encode(String.valueOf(credentialsDto.getPassword())));
         return userMapper.map(entity.toBuilder()
                 .username(credentialsDto.getUsername())
                 .password(String.valueOf(credentialsDto.getPassword()))

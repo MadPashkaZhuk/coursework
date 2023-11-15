@@ -39,13 +39,13 @@ public class MedicationServiceTest {
     @BeforeEach
     public void clearTables() throws Exception {
         try(Connection connection = dataSource.getConnection()) {
-            PreparedStatement weatherPreparedStatement = connection.prepareStatement("DELETE FROM medication");
-            weatherPreparedStatement.execute();
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM medication");
+            preparedStatement.execute();
         }
     }
 
     @Test
-    public void findAll_ShouldReturnCityList_WhenDataExists() throws Exception {
+    public void findAll_ShouldReturnMedicationList_WhenDataExists() throws Exception {
         try(Connection connection = dataSource.getConnection()) {
             NewMedicationDto newMedicationDto = NewMedicationDto.builder()
                     .name("FIRST")
@@ -61,7 +61,7 @@ public class MedicationServiceTest {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                MedicationDto cityDTO = MedicationDto.builder()
+                MedicationDto medicationDto = MedicationDto.builder()
                         .id(resultSet.getLong("id"))
                         .name(resultSet.getString("name"))
                         .manufacturer(resultSet.getString("manufacturer"))
@@ -70,8 +70,7 @@ public class MedicationServiceTest {
                         .weight(resultSet.getInt("weight"))
                         .additionalInfo(resultSet.getString("additional_info"))
                         .build();
-                ;
-                assertTrue(medications.contains(cityDTO));
+                assertTrue(medications.contains(medicationDto));
             }
             assertEquals(1, medications.size());
         }
@@ -118,7 +117,7 @@ public class MedicationServiceTest {
             int counter = 0;
             while (resultSet.next()) {
                 counter++;
-                assertEquals(resultSet.getString("name"), "FIRST");
+                assertEquals("FIRST", resultSet.getString("name"));
             }
             assertEquals(1, counter);
         }
