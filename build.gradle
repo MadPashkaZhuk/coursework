@@ -72,10 +72,6 @@ jacocoTestReport {
 		classDirectories.setFrom(files(classDirectories.files.collect {
 			fileTree(dir: it, exclude: [
 					"com/zhuk/coursework/mapper/*",
-					"com/zhuk/coursework/exception/*",
-					"com/zhuk/coursework/enums/*",
-					"com/zhuk/coursework/utils/*",
-					"com/zhuk/coursework/advice/*",
 					"com/zhuk/coursework/CourseworkApplication.class"
 			])
 		}))
