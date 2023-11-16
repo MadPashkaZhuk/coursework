@@ -36,4 +36,4 @@ out/
 .vscode/
 
 ### DOCKER ###
-src/main/resources/.env
+.env
