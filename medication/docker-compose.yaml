@@ -1,0 +1,18 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: postgres:15
+    env_file: src/main/resources/.env
+    environment:
+      - POSTGRES_USER=$DB_USERNAME
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+      - POSTGRES_DB=coursework
+    ports:
+      - "5432:5432"
+  medication:
+    build: .
+    depends_on:
+      - postgres
+    ports:
+      - "8083:8083"
