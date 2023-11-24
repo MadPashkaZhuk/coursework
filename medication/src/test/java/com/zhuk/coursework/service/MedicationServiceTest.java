@@ -2,9 +2,11 @@ package com.zhuk.coursework.service;
 
 import com.zhuk.coursework.dto.MedicationDto;
 import com.zhuk.coursework.dto.NewMedicationDto;
+import com.zhuk.coursework.dto.UpdateQuantityDto;
 import com.zhuk.coursework.enums.MedicationTypeEnum;
 import com.zhuk.coursework.exception.medication.MedicationAlreadyExistsException;
 import com.zhuk.coursework.exception.medication.MedicationNotFoundException;
+import com.zhuk.coursework.exception.medication.NotEnoughQuantityException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +54,7 @@ public class MedicationServiceTest {
                     .manufacturer("TEST")
                     .type("PEN")
                     .weight(400)
-                    .requirePrescription(false)
+                    .quantity(10)
                     .additionalInfo("FIRST INFO")
                     .build();
             medicationService.saveMedication(newMedicationDto);
@@ -66,7 +68,7 @@ public class MedicationServiceTest {
                         .name(resultSet.getString("name"))
                         .manufacturer(resultSet.getString("manufacturer"))
                         .type(MedicationTypeEnum.valueOf(resultSet.getString("type")))
-                        .requirePrescription(resultSet.getBoolean("require_prescription"))
+                        .quantity(resultSet.getInt("quantity"))
                         .weight(resultSet.getInt("weight"))
                         .additionalInfo(resultSet.getString("additional_info"))
                         .build();
@@ -83,7 +85,7 @@ public class MedicationServiceTest {
                 .manufacturer("TEST")
                 .type("PEN")
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         medicationService.saveMedication(newMedicationDto);
@@ -105,7 +107,7 @@ public class MedicationServiceTest {
                     .manufacturer("TEST")
                     .type("PEN")
                     .weight(400)
-                    .requirePrescription(false)
+                    .quantity(10)
                     .additionalInfo("FIRST INFO")
                     .build();
             medicationService.saveMedication(newMedicationDto);
@@ -130,7 +132,7 @@ public class MedicationServiceTest {
                 .manufacturer("TEST")
                 .type("PEN")
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         medicationService.saveMedication(newMedicationDto);
@@ -145,7 +147,7 @@ public class MedicationServiceTest {
                     .manufacturer("TEST")
                     .type("PEN")
                     .weight(400)
-                    .requirePrescription(false)
+                    .quantity(10)
                     .additionalInfo("FIRST INFO")
                     .build();
             medicationService.saveMedication(newMedicationDto);
@@ -185,7 +187,7 @@ public class MedicationServiceTest {
                     .manufacturer("TEST")
                     .type("PEN")
                     .weight(400)
-                    .requirePrescription(false)
+                    .quantity(10)
                     .additionalInfo("FIRST INFO")
                     .build();
             medicationService.updateMedication(newMedicationDto);
@@ -211,7 +213,7 @@ public class MedicationServiceTest {
                     .manufacturer("TEST")
                     .type("PEN")
                     .weight(400)
-                    .requirePrescription(false)
+                    .quantity(10)
                     .additionalInfo("FIRST INFO")
                     .build();
             medicationService.saveMedication(newMedicationDto);
@@ -234,6 +236,52 @@ public class MedicationServiceTest {
             }
             assertEquals(1, counter);
         }
+    }
+
+    @Test
+    public void updateQuantityForMedication_ShouldUpdateQuantity_WhenHappyPath() throws Exception {
+        try(Connection connection = dataSource.getConnection()) {
+            NewMedicationDto newMedicationDto = NewMedicationDto.builder()
+                    .name("FIRST")
+                    .manufacturer("TEST")
+                    .type("PEN")
+                    .weight(400)
+                    .quantity(10)
+                    .additionalInfo("FIRST INFO")
+                    .build();
+            medicationService.saveMedication(newMedicationDto);
+            Long id = getIdByName("FIRST");
+            medicationService.updateQuantity(id, UpdateQuantityDto.builder().quantity(5).build());
+            String query = "SELECT * FROM medication where id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                assertEquals(5, resultSet.getInt("quantity"));
+            }
+        }
+    }
+
+    @Test
+    public void updateQuantityForMedication_ShouldReturnBadRequest_WhenNotEnoughQuantity() throws Exception {
+        NewMedicationDto newMedicationDto = NewMedicationDto.builder()
+                .name("FIRST")
+                .manufacturer("TEST")
+                .type("PEN")
+                .weight(400)
+                .quantity(10)
+                .additionalInfo("FIRST INFO")
+                .build();
+        medicationService.saveMedication(newMedicationDto);
+        Long id = getIdByName("FIRST");
+        assertThrows(NotEnoughQuantityException.class,
+                () -> medicationService.updateQuantity(id, UpdateQuantityDto.builder().quantity(100).build()));
+    }
+
+    @Test
+    public void updateQuantityForMedication_ShouldReturnNotFound_WhenMedicationDoesntExist() throws Exception {
+        assertThrows(MedicationNotFoundException.class,
+                () -> medicationService.updateQuantity(1000L, UpdateQuantityDto.builder().quantity(1).build()));
     }
 
     private Long getIdByName(String name) throws Exception{

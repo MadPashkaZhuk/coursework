@@ -32,8 +32,8 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: require_prescription
-                  type: boolean
+                  name: quantity
+                  type: int
                   constraints:
                     nullable: false
               - column:

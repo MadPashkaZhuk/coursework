@@ -70,7 +70,7 @@ public class MedicationControllersSecurityTest {
                 .manufacturer("TEST")
                 .type("PEN")
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         mockMvc.perform(post("/api/medication")
@@ -88,7 +88,7 @@ public class MedicationControllersSecurityTest {
                 .manufacturer("TEST")
                 .type("PEN")
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         mockMvc.perform(post("/api/medication")
@@ -107,7 +107,7 @@ public class MedicationControllersSecurityTest {
                 .manufacturer("TEST")
                 .type(MedicationTypeEnum.PEN)
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         NewMedicationDto newMedicationDto = NewMedicationDto.builder()
@@ -115,7 +115,7 @@ public class MedicationControllersSecurityTest {
                 .manufacturer("TEST")
                 .type("PEN")
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         when(medicationService.saveMedication(newMedicationDto)).thenReturn(dto);
@@ -158,7 +158,7 @@ public class MedicationControllersSecurityTest {
                 .manufacturer("TEST")
                 .type("PEN")
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         mockMvc.perform(put("/api/medication")
@@ -176,7 +176,7 @@ public class MedicationControllersSecurityTest {
                 .manufacturer("TEST")
                 .type("PEN")
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         mockMvc.perform(put("/api/medication")
@@ -195,7 +195,7 @@ public class MedicationControllersSecurityTest {
                 .manufacturer("TEST")
                 .type(MedicationTypeEnum.PEN)
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         NewMedicationDto newMedicationDto = NewMedicationDto.builder()
@@ -203,7 +203,7 @@ public class MedicationControllersSecurityTest {
                 .manufacturer("TEST")
                 .type("PEN")
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         when(medicationService.updateMedication(newMedicationDto)).thenReturn(dto);

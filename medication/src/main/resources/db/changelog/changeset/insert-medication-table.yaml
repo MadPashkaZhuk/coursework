@@ -19,8 +19,8 @@ databaseChangeLog:
                   name: weight
                   value: 40
               - column:
-                  name: require_prescription
-                  value: 0
+                  name: quantity
+                  value: 15
               - column:
                   name: additional_info
                   value: 'Vaccine for Covid 19'
@@ -40,8 +40,8 @@ databaseChangeLog:
                   name: weight
                   value: 40
               - column:
-                  name: require_prescription
-                  value: 1
+                  name: quantity
+                  value: 25
               - column:
                   name: additional_info
                   value: 'Require medication guide'
@@ -61,8 +61,8 @@ databaseChangeLog:
                   name: weight
                   value: 100
               - column:
-                  name: require_prescription
-                  value: 0
+                  name: quantity
+                  value: 16
               - column:
                   name: additional_info
                   value: 'Vaccine for Covid 19'
@@ -82,8 +82,8 @@ databaseChangeLog:
                   name: weight
                   value: 100
               - column:
-                  name: require_prescription
-                  value: 1
+                  name: quantity
+                  value: 100
               - column:
                   name: additional_info
                   value: 'Described for cancer'
