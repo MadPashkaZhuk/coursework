@@ -1,6 +1,6 @@
-package com.zhuk.coursework.repository;
+package com.zhuk.hospital.repository;
 
-import com.zhuk.coursework.entity.UserEntity;
+import com.zhuk.hospital.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
