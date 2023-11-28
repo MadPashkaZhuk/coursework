@@ -17,12 +17,19 @@ import java.util.Set;
 @Table(name = "departments")
 public class DepartmentEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
     @ManyToMany(mappedBy = "departments")
     private Set<UserEntity> users;
+
+    @PreRemove
+    private void removeDepartmentFromUsers() {
+        for (UserEntity user : users) {
+            user.getDepartments().remove(this);
+        }
+    }
 
     @Override
     public boolean equals(Object o) {

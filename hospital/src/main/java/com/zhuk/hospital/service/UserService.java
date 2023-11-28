@@ -66,6 +66,13 @@ public class UserService {
     }
 
     @Transactional
+    public void deleteDepartmentByUsername(String username, DepartmentEntity departmentEntity) {
+        UserEntity userEntity = getUserEntityByUsernameOrThrowException(username);
+        userEntity.getDepartments().remove(departmentEntity);
+        userRepository.save(userEntity);
+    }
+
+    @Transactional
     public void deleteUserByUsername(String username) {
         userRepository.deleteByUsername(username);
     }

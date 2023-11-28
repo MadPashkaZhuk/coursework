@@ -1,11 +1,13 @@
 package com.zhuk.hospital.service;
 
 import com.zhuk.hospital.dto.DepartmentDto;
+import com.zhuk.hospital.dto.NewDepartmentDto;
 import com.zhuk.hospital.dto.UserDepartmentAssociationDTO;
 import com.zhuk.hospital.entity.DepartmentEntity;
 import com.zhuk.hospital.entity.UserEntity;
 import com.zhuk.hospital.enums.ApiMessageEnum;
 import com.zhuk.hospital.enums.ErrorCodeEnum;
+import com.zhuk.hospital.exception.department.DepartmentAlreadyExistsException;
 import com.zhuk.hospital.exception.department.DepartmentNotFoundException;
 import com.zhuk.hospital.exception.user.UserUnknownException;
 import com.zhuk.hospital.mapper.DepartmentMapper;
@@ -40,12 +42,58 @@ public class DepartmentService {
                 .toList();
     }
 
+    public DepartmentDto findById(Long id) {
+        return departmentMapper.map(getEntityByIdOrThrowException(id));
+    }
+
+    public DepartmentDto save(NewDepartmentDto newDepartmentDto) {
+        if(getOptionalEntityByName(newDepartmentDto.getName()).isPresent()) {
+            throw new DepartmentAlreadyExistsException(HttpStatus.BAD_REQUEST,
+                    messageSourceWrapper.getMessageCode(ApiMessageEnum.DEPARTMENT_ALREADY_EXISTS),
+                    errorCodeHelper.getCode(ErrorCodeEnum.DEPARTMENT_ALREADY_EXISTS));
+        }
+        DepartmentEntity entity = departmentRepository.save(
+                DepartmentEntity.builder()
+                        .name(newDepartmentDto.getName())
+                        .description(newDepartmentDto.getDescription())
+                        .build());
+        return departmentMapper.map(entity);
+    }
+
+    @Transactional
+    public void deleteDepartment(Long id) {
+        Optional<DepartmentEntity> optionalDepartment = getOptionalEntityById(id);
+        if(optionalDepartment.isEmpty()) {
+            return;
+        }
+        departmentRepository.delete(optionalDepartment.get());
+    }
+
+    @Transactional
+    public DepartmentDto updateDepartment(Long id, NewDepartmentDto dto) {
+        DepartmentEntity entity = getEntityByIdOrThrowException(id);
+        departmentRepository.updateById(dto.getName(), dto.getDescription(), id);
+        return departmentMapper.map(entity.toBuilder()
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .build());
+    }
+
     @Transactional
     public void addUserToDepartment(UserDepartmentAssociationDTO dto) {
         DepartmentEntity departmentEntity = getEntityByIdOrThrowException(dto.getDepartmentId());
         UserEntity userEntity = userService.getUserEntityByUsernameOrThrowException(dto.getUsername());
         departmentEntity.getUsers().add(userEntity);
         userService.addDepartmentByUsername(dto.getUsername(), departmentEntity);
+        departmentRepository.save(departmentEntity);
+    }
+
+    @Transactional
+    public void deleteUserFromDepartment(UserDepartmentAssociationDTO dto) {
+        DepartmentEntity departmentEntity = getEntityByIdOrThrowException(dto.getDepartmentId());
+        UserEntity userEntity = userService.getUserEntityByUsernameOrThrowException(dto.getUsername());
+        departmentEntity.getUsers().remove(userEntity);
+        userService.deleteDepartmentByUsername(dto.getUsername(), departmentEntity);
         departmentRepository.save(departmentEntity);
     }
 
@@ -71,5 +119,9 @@ public class DepartmentService {
                     errorCodeHelper.getCode(ErrorCodeEnum.USER_UNKNOWN_EXCEPTION_CODE));
         }
         return ((CustomUserDetails) authentication.getPrincipal());
+    }
+
+    private Optional<DepartmentEntity> getOptionalEntityByName(String name) {
+        return departmentRepository.findDepartmentEntityByName(name);
     }
 }
