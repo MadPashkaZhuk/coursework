@@ -81,6 +81,6 @@ public class UserController {
         return ResponseEntity.created(uriComponentsBuilder
                         .path("/api/users/{username}")
                         .build(Map.of("username", credentialsDto.getUsername())))
-                .body(userService.updateUser(username, credentialsDto));
+                .body(userService.updateCredentials(username, credentialsDto));
     }
 }

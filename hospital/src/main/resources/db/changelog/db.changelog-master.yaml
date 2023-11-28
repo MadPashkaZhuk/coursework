@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/changeset/create-departments-table.yaml
   - include:
       file: db/changelog/changeset/insert-departments-table.yaml
+  - include:
+      file: db/changelog/changeset/create-user-department.yaml

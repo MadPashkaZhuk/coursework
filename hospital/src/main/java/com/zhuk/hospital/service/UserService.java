@@ -2,6 +2,7 @@ package com.zhuk.hospital.service;
 
 import com.zhuk.hospital.dto.CredentialsDto;
 import com.zhuk.hospital.dto.UserDto;
+import com.zhuk.hospital.entity.DepartmentEntity;
 import com.zhuk.hospital.entity.UserEntity;
 import com.zhuk.hospital.enums.ApiMessageEnum;
 import com.zhuk.hospital.enums.ErrorCodeEnum;
@@ -58,12 +59,19 @@ public class UserService {
     }
 
     @Transactional
+    public void addDepartmentByUsername(String username, DepartmentEntity departmentEntity) {
+        UserEntity userEntity = getUserEntityByUsernameOrThrowException(username);
+        userEntity.getDepartments().add(departmentEntity);
+        userRepository.save(userEntity);
+    }
+
+    @Transactional
     public void deleteUserByUsername(String username) {
         userRepository.deleteByUsername(username);
     }
 
     @Transactional
-    public UserDto updateUser(String username, CredentialsDto credentialsDto) {
+    public UserDto updateCredentials(String username, CredentialsDto credentialsDto) {
         Optional<UserEntity> user = getOptionalEntityByUsername(username);
         if(user.isEmpty()) {
             return saveUser(credentialsDto);
@@ -77,7 +85,7 @@ public class UserService {
                 .build());
     }
 
-    private UserEntity getUserEntityByUsernameOrThrowException(String username) {
+    public UserEntity getUserEntityByUsernameOrThrowException(String username) {
         return getOptionalEntityByUsername(username).orElseThrow(
                 () -> new UserNotFoundException(
                         HttpStatus.NOT_FOUND,

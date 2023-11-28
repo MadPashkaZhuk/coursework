@@ -18,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -28,11 +30,12 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+        String[] allAuthorities = Arrays.stream(UserRoleEnum.values()).map(UserRoleEnum::name).toArray(String[]::new);
         http
                 .authorizeHttpRequests(
                         (authorize) -> authorize
                                 .requestMatchers(HttpMethod.GET, "/api/**")
-                                .hasAnyAuthority(UserRoleEnum.ROLE_USER.name(), UserRoleEnum.ROLE_ADMIN.name())
+                                .hasAnyAuthority(allAuthorities)
                                 .requestMatchers("/api/**").hasAuthority(UserRoleEnum.ROLE_ADMIN.name())
                                 .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
