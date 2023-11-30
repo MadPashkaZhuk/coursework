@@ -1,6 +1,5 @@
 package com.zhuk.hospital.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.zhuk.hospital.enums.UserRoleEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,8 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -32,7 +31,7 @@ public class UserEntity {
             name = "user_department",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "department_id"))
-    private Set<DepartmentEntity> departments;
+    private List<DepartmentEntity> departments;
 
     @Override
     public boolean equals(Object o) {

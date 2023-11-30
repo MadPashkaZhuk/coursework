@@ -4,12 +4,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.zhuk.hospital.entity.DepartmentEntity;
 import com.zhuk.hospital.enums.UserRoleEnum;
 import lombok.Builder;
 import lombok.Value;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Value
@@ -22,5 +21,5 @@ public class UserDto {
     String password;
     UserRoleEnum role;
     @JsonManagedReference
-    Set<DepartmentDto> departments;
+    List<DepartmentDto> departments;
 }

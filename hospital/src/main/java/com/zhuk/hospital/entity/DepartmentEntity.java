@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Data
 @Builder(toBuilder = true)
@@ -22,8 +22,9 @@ public class DepartmentEntity {
     private String name;
     private String description;
     @ManyToMany(mappedBy = "departments")
-    private Set<UserEntity> users;
-
+    private List<UserEntity> users;
+    @OneToMany(mappedBy = "department")
+    private List<TaskEntity> tasks;
     @PreRemove
     private void removeDepartmentFromUsers() {
         for (UserEntity user : users) {
