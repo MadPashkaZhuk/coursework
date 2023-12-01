@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Value;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Value
 @Builder
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 public class NewTaskDto {
     String patient;
     Long medicationId;
-    LocalDateTime dateTimeOfIssue;
+    List<LocalDateTime> dateTimeOfIssue;
     Long departmentId;
+    int amountOfDays;
 }

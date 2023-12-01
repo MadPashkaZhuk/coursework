@@ -8,7 +8,8 @@ public enum ApiMessageEnum {
     USER_NOT_FOUND("security.user.not-found"),
     USER_UNKNOWN_EXCEPTION("security.user.unknown-exception"),
     DEPARTMENT_NOT_FOUND("api.department.not-found"),
-    DEPARTMENT_ALREADY_EXISTS("api.department.already-exists");
+    DEPARTMENT_ALREADY_EXISTS("api.department.already-exists"),
+    TASK_NOT_FOUND("api.task.not-found");
     private final String code;
     ApiMessageEnum(String code) {
         this.code = code;

@@ -57,10 +57,7 @@ public class DepartmentService {
     @Transactional
     public void deleteDepartment(Long id) {
         Optional<DepartmentEntity> optionalDepartment = getOptionalEntityById(id);
-        if(optionalDepartment.isEmpty()) {
-            return;
-        }
-        departmentRepository.delete(optionalDepartment.get());
+        optionalDepartment.ifPresent(departmentRepository::delete);
     }
 
     @Transactional
