@@ -9,6 +9,7 @@ import com.zhuk.hospital.entity.TaskEntity;
 import com.zhuk.hospital.enums.ApiMessageEnum;
 import com.zhuk.hospital.enums.ErrorCodeEnum;
 import com.zhuk.hospital.exception.task.TaskNotFoundException;
+import com.zhuk.hospital.exception.task.TaskOutdatedException;
 import com.zhuk.hospital.exception.user.UserUnknownException;
 import com.zhuk.hospital.mapper.TaskMapper;
 import com.zhuk.hospital.repository.TaskRepository;
@@ -24,10 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 @Component
 @RequiredArgsConstructor
@@ -49,7 +50,7 @@ public class TaskService {
     }
 
     public TaskDto findById(UUID id) {
-        return taskMapper.map(getEntityByIdOrThrowException(id))
+        return taskMapper.map(getEntityByIdOrThrowException(id));
     }
 
     private String getCurrentUsername() {
@@ -67,25 +68,33 @@ public class TaskService {
     }
 
     public List<TaskDto> save(NewTaskDto dto) {
+        validateNewDto(dto);
         DepartmentEntity departmentEntity = departmentService.getEntityByIdOrThrowException(dto.getDepartmentId());
-        List<TaskEntity> taskEntities = new ArrayList<>();
-        for(int i = 0; i < dto.getAmountOfDays(); i++) {
-            for(int j = 0; j < dto.getTimeOfIssuing().size(); j++) {
-                LocalDateTime dateTimeOfIssue = LocalDateTime.of(dto.getStartDay(), dto.getTimeOfIssuing().get(j))
-                        .plusDays(i);
-                TaskEntity entity = taskRepository.save(
-                        TaskEntity.builder()
+        List<TaskEntity> taskEntities = IntStream.range(0, dto.getAmountOfDays())
+                .boxed()
+                .flatMap(i -> dto.getTimeOfIssuing().stream()
+                        .map(time -> LocalDateTime.of(dto.getStartDay(), time).plusDays(i))
+                        .map(dateTimeOfIssue -> TaskEntity.builder()
                                 .patient(dto.getPatient())
                                 .medicationId(dto.getMedicationId())
                                 .department(departmentEntity)
                                 .dateTimeOfIssue(dateTimeOfIssue)
-                                .build());
-                taskEntities.add(entity);
-            }
-        }
+                                .build())
+                        .map(taskRepository::save))
+                .toList();
         return taskEntities.stream()
                 .map(taskMapper::map)
                 .toList();
+    }
+
+    private void validateNewDto(NewTaskDto dto) {
+        if(dto.getStartDay().isBefore(LocalDate.now())) {
+            throw new TaskOutdatedException(
+                    HttpStatus.BAD_REQUEST,
+                    messageSourceWrapper.getMessageCode(ApiMessageEnum.TASK_OUTDATED),
+                    errorCodeHelper.getCode(ErrorCodeEnum.TASK_OUTDATED_CODE)
+            );
+        }
     }
 
     @Transactional

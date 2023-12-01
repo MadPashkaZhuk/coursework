@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ErrorCodeEnum {
     TASK_NOT_FOUND_CODE(6001),
+    TASK_OUTDATED_CODE(6002),
     DEPARTMENT_NOT_FOUND_CODE(7001),
     DEPARTMENT_ALREADY_EXISTS(7002),
     USER_NOT_FOUND_CODE(8001),
