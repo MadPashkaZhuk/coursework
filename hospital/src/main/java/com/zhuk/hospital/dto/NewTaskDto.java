@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Value;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Value
@@ -14,7 +15,8 @@ import java.util.List;
 public class NewTaskDto {
     String patient;
     Long medicationId;
-    List<LocalDateTime> dateTimeOfIssue;
+    LocalDate startDay;
+    List<LocalTime> timeOfIssuing;
     Long departmentId;
     int amountOfDays;
 }

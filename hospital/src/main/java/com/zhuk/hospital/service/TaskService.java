@@ -70,8 +70,9 @@ public class TaskService {
         DepartmentEntity departmentEntity = departmentService.getEntityByIdOrThrowException(dto.getDepartmentId());
         List<TaskEntity> taskEntities = new ArrayList<>();
         for(int i = 0; i < dto.getAmountOfDays(); i++) {
-            for(int j = 0; j < dto.getDateTimeOfIssue().size(); j++) {
-                LocalDateTime dateTimeOfIssue = dto.getDateTimeOfIssue().get(j).plusDays(i);
+            for(int j = 0; j < dto.getTimeOfIssuing().size(); j++) {
+                LocalDateTime dateTimeOfIssue = LocalDateTime.of(dto.getStartDay(), dto.getTimeOfIssuing().get(j))
+                        .plusDays(i);
                 TaskEntity entity = taskRepository.save(
                         TaskEntity.builder()
                                 .patient(dto.getPatient())
