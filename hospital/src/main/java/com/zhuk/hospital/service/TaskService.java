@@ -1,5 +1,6 @@
 package com.zhuk.hospital.service;
 
+import com.zhuk.hospital.client.MedicationRestClient;
 import com.zhuk.hospital.dto.DepartmentDto;
 import com.zhuk.hospital.dto.NewTaskDto;
 import com.zhuk.hospital.dto.TaskDto;
@@ -39,10 +40,13 @@ public class TaskService {
     private final TaskMapper taskMapper;
     private final UserService userService;
     private final DepartmentService departmentService;
+    private final MedicationRestClient medicationRestClient;
 
     public List<TaskDto> findAll() {
         UserDto user = userService.findUserByUsername(getCurrentUsername());
+        System.out.println(getCurrentUsername());
         List<DepartmentDto> departments = user.getDepartments();
+        System.out.println(user.getDepartments());
         return departments.stream()
                 .flatMap(departmentDto -> departmentDto.getTasks().stream())
                 .filter(task -> task.getDateTimeOfIssue().toLocalDate().equals(LocalDate.now()))
@@ -67,10 +71,20 @@ public class TaskService {
         return ((CustomUserDetails) authentication.getPrincipal());
     }
 
+    @Transactional
     public List<TaskDto> save(NewTaskDto dto) {
         validateNewDto(dto);
+        int quantity = dto.getAmountOfDays() * dto.getTimeOfIssuing().size();
+        medicationRestClient.reduceQuantity(dto.getMedicationId(), quantity);
+        List<TaskEntity> taskEntities = getTaskEntityListFromDto(dto);
+        return taskEntities.stream()
+                .map(taskMapper::map)
+                .toList();
+    }
+
+    private List<TaskEntity> getTaskEntityListFromDto(NewTaskDto dto) {
         DepartmentEntity departmentEntity = departmentService.getEntityByIdOrThrowException(dto.getDepartmentId());
-        List<TaskEntity> taskEntities = IntStream.range(0, dto.getAmountOfDays())
+        return IntStream.range(0, dto.getAmountOfDays())
                 .boxed()
                 .flatMap(i -> dto.getTimeOfIssuing().stream()
                         .map(time -> LocalDateTime.of(dto.getStartDay(), time).plusDays(i))
@@ -82,11 +96,7 @@ public class TaskService {
                                 .build())
                         .map(taskRepository::save))
                 .toList();
-        return taskEntities.stream()
-                .map(taskMapper::map)
-                .toList();
     }
-
     private void validateNewDto(NewTaskDto dto) {
         if(dto.getStartDay().isBefore(LocalDate.now())) {
             throw new TaskOutdatedException(
@@ -100,6 +110,12 @@ public class TaskService {
     @Transactional
     public void delete(UUID id) {
         Optional<TaskEntity> optionalTask = getOptionalEntityById(id);
+        optionalTask.ifPresent(taskEntity -> {
+            if(taskEntity.getDateTimeOfIssue().isAfter(LocalDateTime.now())) {
+                medicationRestClient.increaseQuantity(taskEntity.getMedicationId(), 1);
+            }
+            taskRepository.delete(taskEntity);
+        });
         optionalTask.ifPresent(taskRepository::delete);
     }
 

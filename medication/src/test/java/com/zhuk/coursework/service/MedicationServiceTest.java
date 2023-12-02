@@ -251,7 +251,7 @@ public class MedicationServiceTest {
                     .build();
             medicationService.saveMedication(newMedicationDto);
             Long id = getIdByName("FIRST");
-            medicationService.updateQuantity(id, UpdateQuantityDto.builder().quantity(5).build());
+            medicationService.updateQuantity(id, UpdateQuantityDto.builder().quantity(-5).build());
             String query = "SELECT * FROM medication where id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setLong(1, id);
@@ -275,7 +275,7 @@ public class MedicationServiceTest {
         medicationService.saveMedication(newMedicationDto);
         Long id = getIdByName("FIRST");
         assertThrows(NotEnoughQuantityException.class,
-                () -> medicationService.updateQuantity(id, UpdateQuantityDto.builder().quantity(100).build()));
+                () -> medicationService.updateQuantity(id, UpdateQuantityDto.builder().quantity(-100).build()));
     }
 
     @Test

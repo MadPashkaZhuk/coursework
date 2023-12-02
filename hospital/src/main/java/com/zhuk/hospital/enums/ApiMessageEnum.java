@@ -10,7 +10,12 @@ public enum ApiMessageEnum {
     DEPARTMENT_NOT_FOUND("api.department.not-found"),
     DEPARTMENT_ALREADY_EXISTS("api.department.already-exists"),
     TASK_NOT_FOUND("api.task.not-found"),
-    TASK_OUTDATED("api.task.outdated");
+    TASK_OUTDATED("api.task.outdated"),
+    MEDICATION_UNKNOWN_EXCEPTION("api.medication.unknown"),
+    MEDICATION_UNAUTHORIZED("api.medication.unauthorized"),
+    MEDICATION_FORBIDDEN("api.medication.forbidden"),
+    MEDICATION_BAD_REQUEST("api.medication.bad-request"),
+    MEDICATION_NOT_FOUND("api.medication.not-found");
     private final String code;
     ApiMessageEnum(String code) {
         this.code = code;

@@ -94,11 +94,11 @@ public class MedicationService {
     @Transactional
     public void updateQuantity(Long id, UpdateQuantityDto dto) {
         MedicationEntity entity = getEntityByIdOrThrowException(id);
-        if(entity.getQuantity() < dto.getQuantity()) {
+        if(dto.getQuantity() < 0 && entity.getQuantity() < Math.abs(dto.getQuantity())) {
             throw new NotEnoughQuantityException(HttpStatus.BAD_REQUEST,
                     messageSourceWrapper.getMessageCode(ApiMessageEnum.NOT_ENOUGH_QUANTITY),
                     errorCodeHelper.getCode(ErrorCodeEnum.NOT_ENOUGH_QUANTITY));
         }
-        medicationRepository.updateQuantityById(id, dto.getQuantity());
+        medicationRepository.updateQuantityById(id, entity.getQuantity() + dto.getQuantity());
     }
 }
