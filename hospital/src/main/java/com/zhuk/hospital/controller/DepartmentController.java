@@ -21,6 +21,7 @@ import java.util.Map;
 public class DepartmentController {
     private final DepartmentService departmentService;
     @GetMapping
+    @Operation(summary = "Get all departments")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "All info is shown"),
             @ApiResponse(responseCode = "401", description = "User is not authorized")
@@ -41,7 +42,7 @@ public class DepartmentController {
     }
 
     @PatchMapping("/add-user")
-    @Operation(summary = "Add user to department by provided username and departmentt id")
+    @Operation(summary = "Add user to department by provided username and department id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "User is added to department"),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
@@ -54,7 +55,7 @@ public class DepartmentController {
     }
 
     @PatchMapping("/delete-user")
-    @Operation(summary = "delete user from department by provided username and departmentt id")
+    @Operation(summary = "Delete user from department by provided username and department id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "User is deleted from department"),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),

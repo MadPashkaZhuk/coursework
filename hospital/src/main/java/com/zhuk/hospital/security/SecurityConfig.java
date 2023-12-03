@@ -34,8 +34,10 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(
                         (authorize) -> authorize
-                                .requestMatchers(HttpMethod.GET, "/api/**")
+                                .requestMatchers(HttpMethod.GET, "/api/hospital/**")
                                 .hasAnyAuthority(allAuthorities)
+                                .requestMatchers(HttpMethod.POST,"/api/hospital/tasks").hasAuthority(UserRoleEnum.ROLE_DOCTOR.name())
+                                .requestMatchers(HttpMethod.DELETE,"/api/hospital/tasks/**").hasAuthority(UserRoleEnum.ROLE_DOCTOR.name())
                                 .requestMatchers("/api/**").hasAuthority(UserRoleEnum.ROLE_ADMIN.name())
                                 .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)

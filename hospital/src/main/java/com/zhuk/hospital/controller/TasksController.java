@@ -19,7 +19,7 @@ import java.util.UUID;
 @RequestMapping("api/hospital/tasks")
 public class TasksController {
     private final TaskService taskService;
-    @Operation(summary = "Get all tasks for today for connected to current user departments")
+    @Operation(summary = "Get all tasks for today for departments connected to current user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "All tasks are shown"),
             @ApiResponse(responseCode = "401", description = "User is not authorized")

@@ -9,6 +9,7 @@ import com.zhuk.hospital.entity.DepartmentEntity;
 import com.zhuk.hospital.entity.TaskEntity;
 import com.zhuk.hospital.enums.ApiMessageEnum;
 import com.zhuk.hospital.enums.ErrorCodeEnum;
+import com.zhuk.hospital.exception.task.TaskNotAllowedException;
 import com.zhuk.hospital.exception.task.TaskNotFoundException;
 import com.zhuk.hospital.exception.task.TaskOutdatedException;
 import com.zhuk.hospital.exception.user.UserUnknownException;
@@ -43,10 +44,7 @@ public class TaskService {
     private final MedicationRestClient medicationRestClient;
 
     public List<TaskDto> findAll() {
-        UserDto user = userService.findUserByUsername(getCurrentUsername());
-        System.out.println(getCurrentUsername());
-        List<DepartmentDto> departments = user.getDepartments();
-        System.out.println(user.getDepartments());
+        List<DepartmentDto> departments = getDepartmentsListForCurrentUser();
         return departments.stream()
                 .flatMap(departmentDto -> departmentDto.getTasks().stream())
                 .filter(task -> task.getDateTimeOfIssue().toLocalDate().equals(LocalDate.now()))
@@ -57,8 +55,9 @@ public class TaskService {
         return taskMapper.map(getEntityByIdOrThrowException(id));
     }
 
-    private String getCurrentUsername() {
-        return getCurrentUser().getUsername();
+    private List<DepartmentDto> getDepartmentsListForCurrentUser() {
+        UserDto user = userService.findUserByUsername(getCurrentUser().getUsername());
+        return user.getDepartments();
     }
 
     private CustomUserDetails getCurrentUser() {
@@ -105,20 +104,32 @@ public class TaskService {
                     errorCodeHelper.getCode(ErrorCodeEnum.TASK_OUTDATED_CODE)
             );
         }
+        if(!departmentIdIsValidated(dto.getDepartmentId())) {
+            throw new TaskNotAllowedException(
+                    HttpStatus.FORBIDDEN,
+                    messageSourceWrapper.getMessageCode(ApiMessageEnum.TASK_NOT_ALLOWED),
+                    errorCodeHelper.getCode(ErrorCodeEnum.TASK_NOT_ALLOWED_CODE)
+            );
+        }
     }
 
     @Transactional
     public void delete(UUID id) {
         Optional<TaskEntity> optionalTask = getOptionalEntityById(id);
         optionalTask.ifPresent(taskEntity -> {
+            if(!departmentIdIsValidated(taskEntity.getDepartment().getId())) {
+                return;
+            }
             if(taskEntity.getDateTimeOfIssue().isAfter(LocalDateTime.now())) {
                 medicationRestClient.increaseQuantity(taskEntity.getMedicationId(), 1);
             }
             taskRepository.delete(taskEntity);
         });
-        optionalTask.ifPresent(taskRepository::delete);
     }
-
+    private boolean departmentIdIsValidated(Long id) {
+        return getDepartmentsListForCurrentUser().stream()
+                .anyMatch(x -> x.getId().equals(id));
+    }
     private Optional<TaskEntity> getOptionalEntityById(UUID id) {
         return taskRepository.findById(id);
     }

@@ -11,6 +11,7 @@ public enum ApiMessageEnum {
     DEPARTMENT_ALREADY_EXISTS("api.department.already-exists"),
     TASK_NOT_FOUND("api.task.not-found"),
     TASK_OUTDATED("api.task.outdated"),
+    TASK_NOT_ALLOWED("api.task.not-allowed"),
     MEDICATION_UNKNOWN_EXCEPTION("api.medication.unknown"),
     MEDICATION_UNAUTHORIZED("api.medication.unauthorized"),
     MEDICATION_FORBIDDEN("api.medication.forbidden"),
