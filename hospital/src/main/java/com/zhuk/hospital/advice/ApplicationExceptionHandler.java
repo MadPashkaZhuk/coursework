@@ -22,9 +22,11 @@ public class ApplicationExceptionHandler {
 
     @ExceptionHandler(BaseApiException.class)
     public ResponseEntity<ExceptionDto> handleBaseApiException(BaseApiException baseApiException) {
-        ExceptionDto exceptionDto = new ExceptionDto(baseApiException.getStatus(),
-                baseApiException.getMessage(),
-                baseApiException.getErrorCode());
+        ExceptionDto exceptionDto = ExceptionDto.builder()
+                .status(baseApiException.getStatus())
+                .exceptionMessage(baseApiException.getMessage())
+                .code(baseApiException.getErrorCode())
+                .build();
         return new ResponseEntity<>(exceptionDto, baseApiException.getStatus());
     }
 
@@ -38,8 +40,11 @@ public class ApplicationExceptionHandler {
 
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ExceptionDto> handleUnexpectedExceptions(Throwable exception) {
-        ExceptionDto exceptionDto = new ExceptionDto(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage(),
-                errorCodeHelper.getCode(ErrorCodeEnum.UNKNOWN_ERROR_CODE));
+        ExceptionDto exceptionDto = ExceptionDto.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .exceptionMessage(exception.getMessage())
+                .code(errorCodeHelper.getCode(ErrorCodeEnum.UNKNOWN_ERROR_CODE))
+                .build();
         return new ResponseEntity<>(exceptionDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

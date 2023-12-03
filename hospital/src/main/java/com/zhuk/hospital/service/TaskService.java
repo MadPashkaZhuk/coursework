@@ -104,7 +104,7 @@ public class TaskService {
                     errorCodeHelper.getCode(ErrorCodeEnum.TASK_OUTDATED_CODE)
             );
         }
-        if(!departmentIdIsValidated(dto.getDepartmentId())) {
+        if(departmentIdIsNotValidated(dto.getDepartmentId())) {
             throw new TaskNotAllowedException(
                     HttpStatus.FORBIDDEN,
                     messageSourceWrapper.getMessageCode(ApiMessageEnum.TASK_NOT_ALLOWED),
@@ -117,7 +117,7 @@ public class TaskService {
     public void delete(UUID id) {
         Optional<TaskEntity> optionalTask = getOptionalEntityById(id);
         optionalTask.ifPresent(taskEntity -> {
-            if(!departmentIdIsValidated(taskEntity.getDepartment().getId())) {
+            if(departmentIdIsNotValidated(taskEntity.getDepartment().getId())) {
                 return;
             }
             if(taskEntity.getDateTimeOfIssue().isAfter(LocalDateTime.now())) {
@@ -126,9 +126,9 @@ public class TaskService {
             taskRepository.delete(taskEntity);
         });
     }
-    private boolean departmentIdIsValidated(Long id) {
+    private boolean departmentIdIsNotValidated(Long id) {
         return getDepartmentsListForCurrentUser().stream()
-                .anyMatch(x -> x.getId().equals(id));
+                .noneMatch(x -> x.getId().equals(id));
     }
     private Optional<TaskEntity> getOptionalEntityById(UUID id) {
         return taskRepository.findById(id);

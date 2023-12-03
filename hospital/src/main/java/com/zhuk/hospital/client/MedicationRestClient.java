@@ -63,7 +63,7 @@ public class MedicationRestClient {
                     messageSourceWrapper.getMessageCode(ApiMessageEnum.MEDICATION_UNAUTHORIZED),
                     errorCodeHelper.getCode(ErrorCodeEnum.MEDICATION_UNAUTHORIZED_CODE));
         } else if(ex.getStatusCode() == HttpStatus.FORBIDDEN) {
-            exception = new MedicationNotFoundException(HttpStatus.FORBIDDEN,
+            exception = new MedicationForbiddenException(HttpStatus.FORBIDDEN,
                     messageSourceWrapper.getMessageCode(ApiMessageEnum.MEDICATION_FORBIDDEN),
                     errorCodeHelper.getCode(ErrorCodeEnum.MEDICATION_FORBIDDEN_CODE));
         } else if(ex.getStatusCode() == HttpStatus.NOT_FOUND) {
