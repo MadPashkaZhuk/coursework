@@ -71,8 +71,8 @@ jacocoTestReport {
 	afterEvaluate {
 		classDirectories.setFrom(files(classDirectories.files.collect {
 			fileTree(dir: it, exclude: [
-					"com/zhuk/coursework/mapper/*",
-					"com/zhuk/coursework/CourseworkApplication.class"
+					"com/zhuk/hospital/mapper/*",
+					"com/zhuk/hospital/HospitalApplication.class"
 			])
 		}))
 	}
