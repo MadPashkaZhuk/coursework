@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -63,6 +64,13 @@ public class DepartmentService {
     @Transactional
     public DepartmentDto updateDepartment(Long id, NewDepartmentDto dto) {
         DepartmentEntity entity = getEntityByIdOrThrowException(id);
+        getOptionalEntityByName(dto.getName())
+                .filter(department -> !Objects.equals(department.getId(), id))
+                .ifPresent(department -> {
+                    throw new DepartmentAlreadyExistsException(HttpStatus.BAD_REQUEST,
+                            messageSourceWrapper.getMessageCode(ApiMessageEnum.DEPARTMENT_ALREADY_EXISTS),
+                            errorCodeHelper.getCode(ErrorCodeEnum.DEPARTMENT_ALREADY_EXISTS));
+                });
         departmentRepository.updateById(dto.getName(), dto.getDescription(), id);
         return departmentMapper.map(entity.toBuilder()
                 .name(dto.getName())

@@ -22,10 +22,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -106,7 +103,7 @@ public class UserServiceTest {
                         .username(resultSet.getString("username"))
                         .password(resultSet.getString("password"))
                         .role(UserRoleEnum.valueOf(resultSet.getString("role")))
-                        .departments(new HashSet<>())
+                        .departments(new ArrayList<>())
                         .build();
                 assertEquals(user.getId(), userDto.getId());
                 assertEquals(user.getUsername(), userDto.getUsername());
@@ -229,7 +226,6 @@ public class UserServiceTest {
             while (resultSet.next()) {
                 counter++;
                 assertEquals("NEW", resultSet.getString("username"));
-                System.out.println(resultSet.getString("password"));
                 assertTrue(new BCryptPasswordEncoder().matches("PWD", resultSet.getString("password")));
             }
             assertEquals(1, counter);

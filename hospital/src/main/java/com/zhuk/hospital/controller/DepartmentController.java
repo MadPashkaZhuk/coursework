@@ -88,6 +88,8 @@ public class DepartmentController {
     @Operation(summary = "Update department with provided id and new dto")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Department is successfully updated"),
+            @ApiResponse(responseCode = "400", description = "Department with same name already exists"),
+            @ApiResponse(responseCode = "400", description = "Departments with this id doesn't exist"),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
             @ApiResponse(responseCode = "403", description = "Only admin can update departments in database")
     })

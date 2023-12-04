@@ -26,7 +26,7 @@ public class UserEntity {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_department",
             joinColumns = @JoinColumn(name = "user_id"),

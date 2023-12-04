@@ -23,7 +23,7 @@ public class DepartmentEntity {
     private String description;
     @ManyToMany(mappedBy = "departments")
     private List<UserEntity> users;
-    @OneToMany(mappedBy = "department")
+    @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
     private List<TaskEntity> tasks;
     @PreRemove
     private void removeDepartmentFromUsers() {
