@@ -64,6 +64,7 @@ public class UserServiceTest {
             CredentialsDto credentialsDto = CredentialsDto.builder()
                     .username("USER")
                     .password("PASS".toCharArray())
+                    .role(UserRoleEnum.ROLE_USER.name())
                     .build();
             userService.saveUser(credentialsDto);
             List<UserDto> users = userService.findAll();
@@ -90,6 +91,7 @@ public class UserServiceTest {
             CredentialsDto credentialsDto = CredentialsDto.builder()
                     .username("USER")
                     .password("PASS".toCharArray())
+                    .role(UserRoleEnum.ROLE_USER.name())
                     .build();
             userService.saveUser(credentialsDto);
             UserDto user = userService.findUserByUsername("USER");
@@ -124,6 +126,7 @@ public class UserServiceTest {
             CredentialsDto credentialsDto = CredentialsDto.builder()
                     .username("USER")
                     .password("PASS".toCharArray())
+                    .role(UserRoleEnum.ROLE_USER.name())
                     .build();
             userService.saveUser(credentialsDto);
             String query = "SELECT * FROM users where username = ?";
@@ -144,6 +147,7 @@ public class UserServiceTest {
         CredentialsDto credentialsDto = CredentialsDto.builder()
                 .username("USER")
                 .password("PASS".toCharArray())
+                .role(UserRoleEnum.ROLE_USER.name())
                 .build();
         userService.saveUser(credentialsDto);
         assertThrows(UserAlreadyExistsException.class, () -> userService.saveUser(credentialsDto));
@@ -155,6 +159,7 @@ public class UserServiceTest {
             CredentialsDto credentialsDto = CredentialsDto.builder()
                     .username("USER")
                     .password("PASS".toCharArray())
+                    .role(UserRoleEnum.ROLE_USER.name())
                     .build();
             userService.saveUser(credentialsDto);
             String query = "SELECT COUNT(username) FROM users";
@@ -190,6 +195,7 @@ public class UserServiceTest {
             CredentialsDto credentialsDto = CredentialsDto.builder()
                     .username("USER")
                     .password("PASS".toCharArray())
+                    .role(UserRoleEnum.ROLE_USER.name())
                     .build();
             userService.updateCredentials("USER", credentialsDto);
             String query = "SELECT * FROM users where username = ?";
@@ -211,10 +217,12 @@ public class UserServiceTest {
             CredentialsDto credentialsDto = CredentialsDto.builder()
                     .username("USER")
                     .password("PASS".toCharArray())
+                    .role(UserRoleEnum.ROLE_USER.name())
                     .build();
             CredentialsDto newCredentialsDto = CredentialsDto.builder()
                     .username("NEW")
                     .password("PWD".toCharArray())
+                    .role(UserRoleEnum.ROLE_USER.name())
                     .build();
             userService.saveUser(credentialsDto);
             userService.updateCredentials("USER", newCredentialsDto);
@@ -238,6 +246,7 @@ public class UserServiceTest {
             CredentialsDto credentialsDto = CredentialsDto.builder()
                     .username("USER")
                     .password("PASS".toCharArray())
+                    .role(UserRoleEnum.ROLE_USER.name())
                     .build();
             userService.saveUser(credentialsDto);
             userService.addDepartmentByUsername("USER",
@@ -277,6 +286,7 @@ public class UserServiceTest {
             CredentialsDto credentialsDto = CredentialsDto.builder()
                     .username("USER")
                     .password("PASS".toCharArray())
+                    .role(UserRoleEnum.ROLE_USER.name())
                     .build();
             userService.saveUser(credentialsDto);
             DepartmentEntity entity = DepartmentEntity.builder()

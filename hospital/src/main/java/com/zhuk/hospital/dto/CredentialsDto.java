@@ -10,5 +10,6 @@ import lombok.Value;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CredentialsDto {
     String username;
+    String role;
     char[] password;
 }

@@ -9,6 +9,7 @@ import com.zhuk.hospital.entity.DepartmentEntity;
 import com.zhuk.hospital.entity.TaskEntity;
 import com.zhuk.hospital.enums.ApiMessageEnum;
 import com.zhuk.hospital.enums.ErrorCodeEnum;
+import com.zhuk.hospital.enums.UserRoleEnum;
 import com.zhuk.hospital.exception.task.TaskNotAllowedException;
 import com.zhuk.hospital.exception.task.TaskNotFoundException;
 import com.zhuk.hospital.exception.task.TaskOutdatedException;
@@ -57,6 +58,9 @@ public class TaskService {
 
     private List<DepartmentDto> getDepartmentsListForCurrentUser() {
         UserDto user = userService.findUserByUsername(getCurrentUser().getUsername());
+        if(user.getRole() == UserRoleEnum.ROLE_ADMIN) {
+            return departmentService.findAll();
+        }
         return user.getDepartments();
     }
 

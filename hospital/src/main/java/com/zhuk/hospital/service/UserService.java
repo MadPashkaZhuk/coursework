@@ -52,7 +52,7 @@ public class UserService {
                 UserEntity.builder()
                         .username(credentials.getUsername())
                         .password(passwordEncoder.encode(String.valueOf(credentials.getPassword())))
-                        .role(UserRoleEnum.ROLE_USER)
+                        .role(UserRoleEnum.valueOf(credentials.getRole()))
                         .build()
         );
         return userMapper.map(user);

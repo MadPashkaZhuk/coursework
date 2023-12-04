@@ -1,6 +1,7 @@
 package com.zhuk.hospital.service;
 
 import com.zhuk.hospital.dto.*;
+import com.zhuk.hospital.enums.UserRoleEnum;
 import com.zhuk.hospital.exception.department.DepartmentAlreadyExistsException;
 import com.zhuk.hospital.exception.department.DepartmentNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -244,6 +245,7 @@ public class DepartmentServiceTest {
             CredentialsDto credentialsDto = CredentialsDto.builder()
                     .username("USER")
                     .password("PASS".toCharArray())
+                    .role(UserRoleEnum.ROLE_USER.name())
                     .build();
             userService.saveUser(credentialsDto);
             departmentService.addUserToDepartment(UserDepartmentAssociationDTO.builder()
@@ -275,6 +277,7 @@ public class DepartmentServiceTest {
             CredentialsDto credentialsDto = CredentialsDto.builder()
                     .username("USER")
                     .password("PASS".toCharArray())
+                    .role(UserRoleEnum.ROLE_USER.name())
                     .build();
             userService.saveUser(credentialsDto);
             departmentService.addUserToDepartment(UserDepartmentAssociationDTO.builder()
