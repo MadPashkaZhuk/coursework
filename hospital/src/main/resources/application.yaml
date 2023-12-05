@@ -1,0 +1,37 @@
+server:
+  port: 8080
+
+medication:
+  api:
+    url: ${MEDICATION_URL}
+    username: ${MEDICATION_USERNAME}
+    password: ${MEDICATION_PASSWORD}
+
+spring:
+  config:
+    import: .env[.properties]
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  liquibase:
+    enabled: true
+    url: ${DB_URL}
+    user: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    parameters:
+      admin:
+        username: ${ADMIN_USERNAME}
+        password: ${ADMIN_PASSWORD}
+      doc1:
+        username: ${DOC1_USERNAME}
+        password: ${DOC1_PASSWORD}
+      doc2:
+        username: ${DOC2_USERNAME}
+        password: ${DOC2_PASSWORD}
+      nurse1:
+        username: ${NURSE1_USERNAME}
+        password: ${NURSE1_PASSWORD}
+      nurse2:
+        username: ${NURSE2_USERNAME}
+        password: ${NURSE2_PASSWORD}

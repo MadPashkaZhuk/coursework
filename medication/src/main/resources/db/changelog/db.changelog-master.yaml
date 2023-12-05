@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changeset/create-users-table.yaml
+  - include:
+      file: db/changelog/changeset/insert-users-table.yaml
+  - include:
+      file: db/changelog/changeset/create-medication-table.yaml
+  - include:
+      file: db/changelog/changeset/create-unique-name-weight-index-medication-table.yaml
+  - include:
+      file: db/changelog/changeset/insert-medication-table.yaml
+

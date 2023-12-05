@@ -1,0 +1,46 @@
+version: '3.1'
+
+services:
+  postgres_medication:
+    image: postgres:16
+    env_file: .env
+    environment:
+      - POSTGRES_USER=$DB_USERNAME
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+      - POSTGRES_DB=medication
+    networks:
+      - backend
+    ports:
+      - "5432:5432"
+  postgres_hospital:
+    image: postgres:16
+    env_file: .env
+    environment:
+      - POSTGRES_USER=$DB_USERNAME
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+      - POSTGRES_DB=hospital
+    networks:
+      - backend
+    ports:
+      - "5433:5432"
+
+  medication:
+    build: medication
+    depends_on:
+      - postgres_medication
+    networks:
+      - backend
+    ports:
+      - "8083:8083"
+
+  hospital:
+    build: hospital
+    depends_on:
+      - postgres_hospital
+    networks:
+      - backend
+    ports:
+      - "8080:8080"
+
+networks:
+  backend:

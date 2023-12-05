@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-users
+      author: Paul
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  valueComputed: 'gen_random_uuid()'
+              - column:
+                  name: username
+                  value: ${admin.username}
+              - column:
+                  name: password
+                  value: ${admin.password}
+              - column:
+                  name: role
+                  value: ROLE_ADMIN

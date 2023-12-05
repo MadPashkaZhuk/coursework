@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-medication
+      author: Paul
+      changes:
+        - sql:
+            sql: INSERT INTO medication (name, manufacturer, quantity, type, weight, additional_info, user_id)
+                   VALUES
+              ('Comirnaty',
+              'Pfizer',
+              15,              
+              'VACCINE',
+              40,
+              'Vaccine for Covid 19',
+              (SELECT u.id FROM users u WHERE u.username = '${admin.username}'));
+        - sql:
+            sql: INSERT INTO medication (name, manufacturer, quantity, type, weight, additional_info, user_id)
+              VALUES
+              ('Humira',
+              'AbbVie',
+              25,
+              'PEN',
+              50,
+              'Require medication guide',
+              (SELECT u.id FROM users u WHERE u.username = '${admin.username}'));
+        - sql:
+            sql: INSERT INTO medication (name, manufacturer, quantity, type, weight, additional_info, user_id)
+              VALUES
+              ('Spikevax',
+              'Moderna',
+              16,
+              'VACCINE',
+              100,
+              'Vaccine for Covid 19',
+              (SELECT u.id FROM users u WHERE u.username = '${admin.username}'));
