@@ -1,5 +1,6 @@
 package com.zhuk.coursework.dto;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -7,6 +8,7 @@ import com.zhuk.coursework.enums.UserRoleEnum;
 import lombok.Builder;
 import lombok.Value;
 
+import java.util.List;
 import java.util.UUID;
 
 @Value
@@ -18,4 +20,6 @@ public class UserDto {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String password;
     UserRoleEnum role;
+    @JsonManagedReference
+    List<MedicationDto> medications;
 }

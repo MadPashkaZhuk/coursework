@@ -77,7 +77,7 @@ public class UserService {
                 .build());
     }
 
-    private UserEntity getUserEntityByUsernameOrThrowException(String username) {
+    public UserEntity getUserEntityByUsernameOrThrowException(String username) {
         return getOptionalEntityByUsername(username).orElseThrow(
                 () -> new UserNotFoundException(
                         HttpStatus.NOT_FOUND,

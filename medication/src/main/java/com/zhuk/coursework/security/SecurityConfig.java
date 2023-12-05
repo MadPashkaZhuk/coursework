@@ -31,9 +31,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(
                         (authorize) -> authorize
-                                .requestMatchers(HttpMethod.GET, "/api/**")
+                                .requestMatchers("/api/**")
                                 .hasAnyAuthority(UserRoleEnum.ROLE_USER.name(), UserRoleEnum.ROLE_ADMIN.name())
-                                .requestMatchers("/api/**").hasAuthority(UserRoleEnum.ROLE_ADMIN.name())
                                 .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())

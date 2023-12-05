@@ -24,4 +24,7 @@ public class MedicationEntity {
     int weight;
     int quantity;
     String additionalInfo;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 }

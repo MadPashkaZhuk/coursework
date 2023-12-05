@@ -11,4 +11,6 @@ databaseChangeLog:
                   name: name
               - column:
                   name: weight
+              - column:
+                  name: user_id
             unique: true

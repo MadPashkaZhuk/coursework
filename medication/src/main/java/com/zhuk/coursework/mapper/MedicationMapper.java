@@ -1,19 +1,15 @@
 package com.zhuk.coursework.mapper;
 
 import com.zhuk.coursework.dto.MedicationDto;
-import com.zhuk.coursework.dto.NewMedicationDto;
 import com.zhuk.coursework.entity.MedicationEntity;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MedicationMapper {
     MedicationDto map(MedicationEntity medicationEntity);
 
     @InheritInverseConfiguration
     MedicationEntity map(MedicationDto medicationDto);
-
-    @Mapping(target = "id", ignore = true)
-    MedicationEntity mapFromNewDto(NewMedicationDto newMedicationDto);
 }
