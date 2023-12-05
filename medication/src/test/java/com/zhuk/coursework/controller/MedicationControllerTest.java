@@ -3,9 +3,11 @@ package com.zhuk.coursework.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhuk.coursework.dto.MedicationDto;
 import com.zhuk.coursework.dto.NewMedicationDto;
+import com.zhuk.coursework.dto.UpdateQuantityDto;
 import com.zhuk.coursework.enums.MedicationTypeEnum;
 import com.zhuk.coursework.exception.medication.MedicationAlreadyExistsException;
 import com.zhuk.coursework.exception.medication.MedicationNotFoundException;
+import com.zhuk.coursework.exception.medication.NotEnoughQuantityException;
 import com.zhuk.coursework.service.MedicationService;
 import com.zhuk.coursework.utils.ErrorCodeHelper;
 import org.junit.jupiter.api.Test;
@@ -20,8 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -53,7 +54,7 @@ public class MedicationControllerTest {
                 .manufacturer("TEST")
                 .type(MedicationTypeEnum.PEN)
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         MedicationDto second = MedicationDto.builder()
@@ -62,7 +63,7 @@ public class MedicationControllerTest {
                 .manufacturer("TEST")
                 .type(MedicationTypeEnum.PEN)
                 .weight(500)
-                .requirePrescription(true)
+                .quantity(100)
                 .additionalInfo("SECOND INFO")
                 .build();
 
@@ -81,7 +82,7 @@ public class MedicationControllerTest {
                 .manufacturer("TEST")
                 .type(MedicationTypeEnum.PEN)
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         when(medicationService.findById(1L)).thenReturn(dto);
@@ -106,7 +107,7 @@ public class MedicationControllerTest {
                 .manufacturer("TEST")
                 .type(MedicationTypeEnum.PEN)
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         NewMedicationDto newMedicationDto = NewMedicationDto.builder()
@@ -114,7 +115,7 @@ public class MedicationControllerTest {
                 .manufacturer("TEST")
                 .type("PEN")
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         when(medicationService.saveMedication(newMedicationDto)).thenReturn(dto);
@@ -132,7 +133,7 @@ public class MedicationControllerTest {
                 .manufacturer("TEST")
                 .type("PEN")
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         when(medicationService.saveMedication(dto))
@@ -158,7 +159,7 @@ public class MedicationControllerTest {
                 .manufacturer("TEST")
                 .type(MedicationTypeEnum.PEN)
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         NewMedicationDto newMedicationDto = NewMedicationDto.builder()
@@ -166,7 +167,7 @@ public class MedicationControllerTest {
                 .manufacturer("TEST")
                 .type("PEN")
                 .weight(400)
-                .requirePrescription(false)
+                .quantity(10)
                 .additionalInfo("FIRST INFO")
                 .build();
         when(medicationService.updateMedication(newMedicationDto))
@@ -176,5 +177,55 @@ public class MedicationControllerTest {
                         .content(objectMapper.writeValueAsString(newMedicationDto)))
                 .andExpect(status().isCreated())
                 .andExpect(content().json(objectMapper.writeValueAsString(dto)));
+    }
+
+    @Test
+    public void updateQuantityForMedication_ShouldUpdateQuantity_WhenHappyPath() throws Exception {
+        MedicationDto dto = MedicationDto.builder()
+                .id(1L)
+                .name("FIRST")
+                .manufacturer("TEST")
+                .type(MedicationTypeEnum.PEN)
+                .weight(400)
+                .quantity(10)
+                .additionalInfo("FIRST INFO")
+                .build();
+        UpdateQuantityDto quantityDto = UpdateQuantityDto.builder()
+                .quantity(5)
+                .build();
+        doNothing().when(medicationService).updateQuantity(1L, quantityDto);
+
+        mockMvc.perform(patch("/api/medication/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(quantityDto)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updateQuantityForMedication_ShouldReturnNotFound_WhenMedicationDoesntExist() throws Exception {
+        UpdateQuantityDto quantityDto = UpdateQuantityDto.builder()
+                .quantity(5)
+                .build();
+        doThrow(new MedicationNotFoundException(HttpStatus.NOT_FOUND, "TEST", 1000))
+                .when(medicationService).updateQuantity(999L, quantityDto);
+        mockMvc.perform(patch("/api/medication/999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(quantityDto)))
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    public void updateQuantityForMedication_ShouldReturnBadRequest_WhenNotEnoughQuantity() throws Exception {
+        UpdateQuantityDto quantityDto = UpdateQuantityDto.builder()
+                .quantity(5)
+                .build();
+        doThrow(new NotEnoughQuantityException(HttpStatus.BAD_REQUEST, "TEST", 1000))
+                .when(medicationService).updateQuantity(999L, quantityDto);
+        mockMvc.perform(patch("/api/medication/999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(quantityDto)))
+                .andExpect(status().isBadRequest());
+
     }
 }

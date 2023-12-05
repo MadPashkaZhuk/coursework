@@ -2,12 +2,14 @@ package com.zhuk.coursework.service;
 
 import com.zhuk.coursework.dto.MedicationDto;
 import com.zhuk.coursework.dto.NewMedicationDto;
+import com.zhuk.coursework.dto.UpdateQuantityDto;
 import com.zhuk.coursework.entity.MedicationEntity;
 import com.zhuk.coursework.enums.ApiMessageEnum;
 import com.zhuk.coursework.enums.ErrorCodeEnum;
 import com.zhuk.coursework.enums.MedicationTypeEnum;
 import com.zhuk.coursework.exception.medication.MedicationAlreadyExistsException;
 import com.zhuk.coursework.exception.medication.MedicationNotFoundException;
+import com.zhuk.coursework.exception.medication.NotEnoughQuantityException;
 import com.zhuk.coursework.mapper.MedicationMapper;
 import com.zhuk.coursework.repository.MedicationRepository;
 import com.zhuk.coursework.utils.ErrorCodeHelper;
@@ -68,7 +70,7 @@ public class MedicationService {
 
     private void updateByNameAndWeight(NewMedicationDto dto) {
         medicationRepository.updateByNameAndWeight(dto.getName(), dto.getManufacturer(),
-                dto.getWeight(), dto.isRequirePrescription(),
+                dto.getWeight(), dto.getQuantity(),
                 dto.getAdditionalInfo(), MedicationTypeEnum.valueOf(dto.getType()));
     }
 
@@ -87,5 +89,16 @@ public class MedicationService {
 
     private Optional<MedicationEntity> getOptionalEntityByNameAndWeight(String name, int weight) {
         return medicationRepository.getMedicationEntityByNameAndWeight(name, weight);
+    }
+
+    @Transactional
+    public void updateQuantity(Long id, UpdateQuantityDto dto) {
+        MedicationEntity entity = getEntityByIdOrThrowException(id);
+        if(dto.getQuantity() < 0 && entity.getQuantity() < Math.abs(dto.getQuantity())) {
+            throw new NotEnoughQuantityException(HttpStatus.BAD_REQUEST,
+                    messageSourceWrapper.getMessageCode(ApiMessageEnum.NOT_ENOUGH_QUANTITY),
+                    errorCodeHelper.getCode(ErrorCodeEnum.NOT_ENOUGH_QUANTITY));
+        }
+        medicationRepository.updateQuantityById(id, entity.getQuantity() + dto.getQuantity());
     }
 }

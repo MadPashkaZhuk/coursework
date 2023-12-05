@@ -13,6 +13,6 @@ public class NewMedicationDto {
     String manufacturer;
     String type;
     int weight;
-    boolean requirePrescription;
+    int quantity;
     String additionalInfo;
 }

@@ -1,0 +1,24 @@
+package com.zhuk.hospital.enums;
+
+import lombok.Getter;
+
+@Getter
+public enum ErrorCodeEnum {
+    MEDICATION_UNAUTHORIZED_CODE(5001),
+    MEDICATION_FORBIDDEN_CODE(5002),
+    MEDICATION_BAD_REQUEST_CODE(5003),
+    MEDICATION_NOT_FOUND_CODE(5004),
+    TASK_NOT_FOUND_CODE(6001),
+    TASK_OUTDATED_CODE(6002),
+    TASK_NOT_ALLOWED_CODE(6003),
+    DEPARTMENT_NOT_FOUND_CODE(7001),
+    DEPARTMENT_ALREADY_EXISTS(7002),
+    USER_NOT_FOUND_CODE(8001),
+    USER_ALREADY_EXISTS_CODE(8002),
+    USER_UNKNOWN_EXCEPTION_CODE(8003),
+    UNKNOWN_ERROR_CODE(9999);
+    private final int code;
+    ErrorCodeEnum(int code) {
+        this.code = code;
+    }
+}

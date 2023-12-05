@@ -11,8 +11,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @OpenAPIDefinition(info = @Info(title = "Medication API", version = "1.0"))
 @EnableConfigurationProperties({AppConfig.class, LiquibaseConfig.class})
 @SpringBootApplication
-public class CourseworkApplication {
+public class MedicationApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(CourseworkApplication.class, args);
+		SpringApplication.run(MedicationApplication.class, args);
 	}
 }

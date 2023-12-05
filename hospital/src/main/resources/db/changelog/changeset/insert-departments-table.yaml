@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-departments
+      author: Paul
+      changes:
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: name
+                  value: 'Cardiology'
+              - column:
+                  name: description
+                  value: 'Concerned with disorders of the heart'
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: name
+                  value: 'Orthopedics'
+              - column:
+                  name: description
+                  value: 'Specialize in injuries of the musculoskeletal system'
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: name
+                  value: 'Surgery'
+              - column:
+                  name: description
+                  value: 'Remove or repair diseased tissues or organs'

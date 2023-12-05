@@ -2,6 +2,7 @@ package com.zhuk.coursework.controller;
 
 import com.zhuk.coursework.dto.MedicationDto;
 import com.zhuk.coursework.dto.NewMedicationDto;
+import com.zhuk.coursework.dto.UpdateQuantityDto;
 import com.zhuk.coursework.service.MedicationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,7 +42,6 @@ public class MedicationController {
     public ResponseEntity<MedicationDto> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(medicationService.findById(id));
     }
-
     @Operation(summary = "Save medication")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Medication provided is successfully saved"),
@@ -85,5 +85,10 @@ public class MedicationController {
         return ResponseEntity.created(uriComponentsBuilder.path("/api/medication/{id}")
                         .build(Map.of("id", response.getId())))
                 .body(response);
+    }
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateQuantityForMedication(@PathVariable("id") Long id, @RequestBody UpdateQuantityDto dto) {
+        medicationService.updateQuantity(id, dto);
+        return ResponseEntity.ok().build();
     }
 }

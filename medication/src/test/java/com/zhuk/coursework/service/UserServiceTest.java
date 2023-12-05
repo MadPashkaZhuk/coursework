@@ -189,7 +189,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void updateMedication_ShouldUpdateMedication_WhenMedicationAlreadyExists() throws Exception {
+    public void updateUser_ShouldUpdateUser_WhenUserAlreadyExists() throws Exception {
         try(Connection connection = dataSource.getConnection()) {
             CredentialsDto credentialsDto = CredentialsDto.builder()
                     .username("USER")
@@ -209,7 +209,6 @@ public class UserServiceTest {
             while (resultSet.next()) {
                 counter++;
                 assertEquals("NEW", resultSet.getString("username"));
-                System.out.println(resultSet.getString("password"));
                 assertTrue(new BCryptPasswordEncoder().matches("PWD", resultSet.getString("password")));
             }
             assertEquals(1, counter);

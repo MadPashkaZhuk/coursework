@@ -18,6 +18,6 @@ public class MedicationDto {
     @Enumerated(EnumType.STRING)
     MedicationTypeEnum type;
     int weight;
-    boolean requirePrescription;
+    int quantity;
     String additionalInfo;
 }
