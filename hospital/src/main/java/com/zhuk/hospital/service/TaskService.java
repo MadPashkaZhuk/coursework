@@ -79,13 +79,13 @@ public class TaskService {
         validateNewDto(dto);
         int quantity = dto.getAmountOfDays() * dto.getTimeOfIssuing().size();
         medicationRestClient.reduceQuantity(dto.getMedicationId(), quantity);
-        List<TaskEntity> taskEntities = getTaskEntityListFromDto(dto);
+        List<TaskEntity> taskEntities = saveAndGetTaskEntityListFromDto(dto);
         return taskEntities.stream()
                 .map(taskMapper::map)
                 .toList();
     }
 
-    private List<TaskEntity> getTaskEntityListFromDto(NewTaskDto dto) {
+    private List<TaskEntity> saveAndGetTaskEntityListFromDto(NewTaskDto dto) {
         DepartmentEntity departmentEntity = departmentService.getEntityByIdOrThrowException(dto.getDepartmentId());
         return IntStream.range(0, dto.getAmountOfDays())
                 .boxed()

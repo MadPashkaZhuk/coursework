@@ -23,8 +23,8 @@ public class DepartmentController {
     @GetMapping
     @Operation(summary = "Get all departments")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "All info is shown"),
-            @ApiResponse(responseCode = "401", description = "User is not authorized")
+            @ApiResponse(responseCode = "200", description = "All info is shown."),
+            @ApiResponse(responseCode = "401", description = "User is not authorized.")
     })
     public ResponseEntity<List<DepartmentDto>> findAll() {
         return ResponseEntity.ok(departmentService.findAll());
@@ -33,9 +33,9 @@ public class DepartmentController {
     @GetMapping("/{id}")
     @Operation(summary = "Get department by provided id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Department is found"),
-            @ApiResponse(responseCode = "401", description = "User is not authorized"),
-            @ApiResponse(responseCode = "404", description = "Department with this name doesn't exists")
+            @ApiResponse(responseCode = "200", description = "Department is found."),
+            @ApiResponse(responseCode = "401", description = "User is not authorized."),
+            @ApiResponse(responseCode = "404", description = "Error code 7001: Department with this name doesn't exists.")
     })
     public ResponseEntity<DepartmentDto> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(departmentService.findById(id));
@@ -44,10 +44,11 @@ public class DepartmentController {
     @PatchMapping("/add-user")
     @Operation(summary = "Add user to department by provided username and department id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "User is added to department"),
-            @ApiResponse(responseCode = "401", description = "User is not authorized"),
-            @ApiResponse(responseCode = "403", description = "Only admin can add user to department"),
-            @ApiResponse(responseCode = "404", description = "User or department doesn't exist")
+            @ApiResponse(responseCode = "204", description = "User is added to department."),
+            @ApiResponse(responseCode = "401", description = "User is not authorized."),
+            @ApiResponse(responseCode = "403", description = "Only admin can add user to department."),
+            @ApiResponse(responseCode = "404", description = "Error code 7001: Department with this name doesn't exists.<br>" +
+                    "Error code 8001: User with this username can't be found.")
     })
     public ResponseEntity<?> addUserToDepartment(@RequestBody UserDepartmentAssociationDTO dto) {
         departmentService.addUserToDepartment(dto);
@@ -57,10 +58,11 @@ public class DepartmentController {
     @PatchMapping("/delete-user")
     @Operation(summary = "Delete user from department by provided username and department id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "User is deleted from department"),
-            @ApiResponse(responseCode = "401", description = "User is not authorized"),
-            @ApiResponse(responseCode = "403", description = "Only admin can delete user from department"),
-            @ApiResponse(responseCode = "404", description = "User or department doesn't exist")
+            @ApiResponse(responseCode = "204", description = "User is deleted from department."),
+            @ApiResponse(responseCode = "401", description = "User is not authorized."),
+            @ApiResponse(responseCode = "403", description = "Only admin can delete user from department."),
+            @ApiResponse(responseCode = "404", description = "Error code 7001: Department with this name doesn't exists.<br>" +
+                    "Error code 8001: User with this username can't be found.")
     })
     public ResponseEntity<?> deleteUserFromDepartment(@RequestBody UserDepartmentAssociationDTO dto) {
         departmentService.deleteUserFromDepartment(dto);
@@ -70,10 +72,10 @@ public class DepartmentController {
     @PostMapping
     @Operation(summary = "Save departments with provided dto")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "New department is successfully created"),
-            @ApiResponse(responseCode = "400", description = "Department with same name already exists"),
-            @ApiResponse(responseCode = "401", description = "User is not authorized"),
-            @ApiResponse(responseCode = "403", description = "Only admin can add new users to database")
+            @ApiResponse(responseCode = "201", description = "New department is successfully created."),
+            @ApiResponse(responseCode = "400", description = "Error code 7002: Department with same name already exists."),
+            @ApiResponse(responseCode = "401", description = "User is not authorized."),
+            @ApiResponse(responseCode = "403", description = "Only admin can add new users to database.")
     })
     public ResponseEntity<DepartmentDto> saveDepartment(@RequestBody NewDepartmentDto newDepartmentDto,
                                             UriComponentsBuilder uriComponentsBuilder) {
@@ -87,11 +89,11 @@ public class DepartmentController {
     @PutMapping("/{id}")
     @Operation(summary = "Update department with provided id and new dto")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Department is successfully updated"),
-            @ApiResponse(responseCode = "400", description = "Department with same name already exists"),
-            @ApiResponse(responseCode = "400", description = "Departments with this id doesn't exist"),
-            @ApiResponse(responseCode = "401", description = "User is not authorized"),
-            @ApiResponse(responseCode = "403", description = "Only admin can update departments in database")
+            @ApiResponse(responseCode = "201", description = "Department is successfully updated."),
+            @ApiResponse(responseCode = "400", description = "Error code 7002: Department with same name already exists."),
+            @ApiResponse(responseCode = "401", description = "User is not authorized."),
+            @ApiResponse(responseCode = "403", description = "Only admin can update departments in database."),
+            @ApiResponse(responseCode = "404", description = "Error code 7001: Departments with this id doesn't exist.")
     })
     public ResponseEntity<DepartmentDto> updateDepartment(@PathVariable("id") Long id, @RequestBody NewDepartmentDto dto,
                                               UriComponentsBuilder uriComponentsBuilder) {
@@ -104,9 +106,9 @@ public class DepartmentController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete department with provided id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Department is successfully deleted"),
-            @ApiResponse(responseCode = "401", description = "User is not authorized"),
-            @ApiResponse(responseCode = "403", description = "Only admin can delete departments from database")
+            @ApiResponse(responseCode = "204", description = "Department is successfully deleted."),
+            @ApiResponse(responseCode = "401", description = "User is not authorized."),
+            @ApiResponse(responseCode = "403", description = "Only admin can delete departments from database.")
     })
     public ResponseEntity<?> deleteDepartment(@PathVariable("id") Long id) {
         departmentService.deleteDepartment(id);

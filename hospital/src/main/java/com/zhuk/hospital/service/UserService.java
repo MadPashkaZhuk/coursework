@@ -79,6 +79,12 @@ public class UserService {
 
     @Transactional
     public UserDto updateCredentials(String username, CredentialsDto credentialsDto) {
+        if (!username.equals(credentialsDto.getUsername()) &&
+                getOptionalEntityByUsername(credentialsDto.getUsername()).isPresent()) {
+            throw new UserAlreadyExistsException(HttpStatus.BAD_REQUEST,
+                    messageSourceWrapper.getMessageCode(ApiMessageEnum.USER_ALREADY_EXISTS),
+                    errorCodeHelper.getCode(ErrorCodeEnum.USER_ALREADY_EXISTS_CODE));
+        }
         Optional<UserEntity> user = getOptionalEntityByUsername(username);
         if(user.isEmpty()) {
             return saveUser(credentialsDto);

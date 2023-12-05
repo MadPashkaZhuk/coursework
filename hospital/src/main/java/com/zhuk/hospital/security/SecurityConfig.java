@@ -31,14 +31,18 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         String[] allAuthorities = Arrays.stream(UserRoleEnum.values()).map(UserRoleEnum::name).toArray(String[]::new);
+        String[] adminAndDoctorAuthorities = {UserRoleEnum.ROLE_ADMIN.name(), UserRoleEnum.ROLE_DOCTOR.name()};
         http
                 .authorizeHttpRequests(
                         (authorize) -> authorize
                                 .requestMatchers(HttpMethod.GET, "/api/hospital/**")
                                 .hasAnyAuthority(allAuthorities)
-                                .requestMatchers(HttpMethod.POST,"/api/hospital/tasks").hasAuthority(UserRoleEnum.ROLE_DOCTOR.name())
-                                .requestMatchers(HttpMethod.DELETE,"/api/hospital/tasks/**").hasAuthority(UserRoleEnum.ROLE_DOCTOR.name())
-                                .requestMatchers("/api/**").hasAuthority(UserRoleEnum.ROLE_ADMIN.name())
+                                .requestMatchers(HttpMethod.POST,"/api/hospital/tasks")
+                                .hasAnyAuthority(adminAndDoctorAuthorities)
+                                .requestMatchers(HttpMethod.DELETE,"/api/hospital/tasks/**")
+                                .hasAnyAuthority(adminAndDoctorAuthorities)
+                                .requestMatchers("/api/**")
+                                .hasAuthority(UserRoleEnum.ROLE_ADMIN.name())
                                 .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
