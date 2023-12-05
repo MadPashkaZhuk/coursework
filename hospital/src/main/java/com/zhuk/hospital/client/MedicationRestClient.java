@@ -42,7 +42,7 @@ public class MedicationRestClient {
         } catch (Throwable ex) {
             throw new MedicationUnknownException(HttpStatus.INTERNAL_SERVER_ERROR,
                     messageSourceWrapper.getMessageCode(ApiMessageEnum.MEDICATION_UNKNOWN_EXCEPTION),
-                    errorCodeHelper.getCode(ErrorCodeEnum.UNKNOWN_ERROR_CODE));
+                    errorCodeHelper.getCode(ErrorCodeEnum.MEDICATION_UNKNOWN_ERROR_CODE));
         }
     }
     private HttpEntity<UpdateMedicationQuantityDto> getHttpEntityForQuantity(Integer quantity) {
@@ -74,7 +74,7 @@ public class MedicationRestClient {
         else {
             exception = new MedicationUnknownException(HttpStatus.INTERNAL_SERVER_ERROR,
                     messageSourceWrapper.getMessageCode(ApiMessageEnum.MEDICATION_UNKNOWN_EXCEPTION),
-                    errorCodeHelper.getCode(ErrorCodeEnum.UNKNOWN_ERROR_CODE));
+                    errorCodeHelper.getCode(ErrorCodeEnum.MEDICATION_UNKNOWN_ERROR_CODE));
         }
         return exception;
     }

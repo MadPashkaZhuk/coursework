@@ -52,7 +52,6 @@ tasks.named('test') {
 
 jacoco {
 	toolVersion = '0.8.9'
-	reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
 }
 
 test {
@@ -71,8 +70,7 @@ jacocoTestReport {
 	afterEvaluate {
 		classDirectories.setFrom(files(classDirectories.files.collect {
 			fileTree(dir: it, exclude: [
-					"com/zhuk/hospital/mapper/*",
-					"com/zhuk/hospital/HospitalApplication.class"
+					"com/zhuk/hospital/mapper/*"
 			])
 		}))
 	}

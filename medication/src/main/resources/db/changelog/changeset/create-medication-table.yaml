@@ -39,4 +39,16 @@ databaseChangeLog:
               - column:
                   name: additional_info
                   type: varchar(256)
-
+              - column:
+                  name: user_id
+                  type: uuid
+  - changeSet:
+      id: add-foreign-key
+      author: Paul
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: medication
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_user_id

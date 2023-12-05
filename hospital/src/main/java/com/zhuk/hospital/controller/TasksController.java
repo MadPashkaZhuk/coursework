@@ -21,8 +21,8 @@ public class TasksController {
     private final TaskService taskService;
     @Operation(summary = "Get all tasks for today for departments connected to current user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "All tasks are shown"),
-            @ApiResponse(responseCode = "401", description = "User is not authorized")
+            @ApiResponse(responseCode = "200", description = "All tasks are shown."),
+            @ApiResponse(responseCode = "401", description = "User is not authorized.")
     })
     @GetMapping
     public ResponseEntity<List<TaskDto>> findAll() {
@@ -31,9 +31,9 @@ public class TasksController {
 
     @Operation(summary = "Get task by provided id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "All tasks are shown"),
-            @ApiResponse(responseCode = "401", description = "User is not authorized"),
-            @ApiResponse(responseCode = "404", description = "Task with provided id doesn't exist")
+            @ApiResponse(responseCode = "200", description = "All tasks are shown."),
+            @ApiResponse(responseCode = "401", description = "User is not authorized."),
+            @ApiResponse(responseCode = "404", description = "Error code 6001: Task with provided id doesn't exist.")
     })
     @GetMapping("/{id}")
     public ResponseEntity<TaskDto> findById(@PathVariable("id") UUID id) {
@@ -43,10 +43,17 @@ public class TasksController {
     @Operation(summary = "Add tasks with NewTaskDto, " +
             "amount of added tasks equals to amountOfDays * dateTimeOfIssue.size()")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "All tasks are added"),
-            @ApiResponse(responseCode = "401", description = "User is not authorized"),
-            @ApiResponse(responseCode = "403", description = "Only admin/doctor can add tasks"),
-            @ApiResponse(responseCode = "404", description = "Department provided doesn't exists")
+            @ApiResponse(responseCode = "201", description = "All tasks are added."),
+            @ApiResponse(responseCode = "400", description = "Error code 6002: You are trying to add outdated task.<br>" +
+                    "Error code 5003: Some params of request are not valid, probably out of stock."),
+            @ApiResponse(responseCode = "401", description = "User is not authorized.<br>" +
+                    "Error code 5001: Something wrong with storage account."),
+            @ApiResponse(responseCode = "403", description = "Only admin/doctor can add tasks.<br>" +
+                    "Error code 6003: You cant add task to this department.<br>" +
+                    "Error code 5002: Something wrong with permissions in storage account."),
+            @ApiResponse(responseCode = "404", description = "Error code 7001: Department provided doesn't exists.<br>" +
+                    "Error code 5004: Medication with this id doesn't exist in storage."),
+            @ApiResponse(responseCode = "500", description = "Error code 5999: Something happened with storage api.")
     })
     @PostMapping
     public ResponseEntity<List<TaskDto>> save(@RequestBody NewTaskDto dto, UriComponentsBuilder uriComponentsBuilder) {
@@ -57,9 +64,12 @@ public class TasksController {
 
     @Operation(summary = "Delete task with provided id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Task is deleted"),
-            @ApiResponse(responseCode = "401", description = "User is not authorized"),
-            @ApiResponse(responseCode = "403", description = "Only admin/doctor can delete task")
+            @ApiResponse(responseCode = "204", description = "Task is deleted."),
+            @ApiResponse(responseCode = "401", description = "User is not authorized.<br>" +
+                    "Error code 5001: Something wrong with storage account."),
+            @ApiResponse(responseCode = "403", description = "Only admin/doctor can add tasks.<br>" +
+                    "Error code 5002: Something wrong with permissions in storage account."),
+            @ApiResponse(responseCode = "500", description = "Error code 5999: Something happened with storage api.")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") UUID id) {

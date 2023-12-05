@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -22,7 +21,10 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -58,7 +60,6 @@ public class UserServiceTest {
 
 
     @Test
-    @Transactional
     public void findAll_ShouldReturnUserList_WhenDataExists() throws Exception {
         try(Connection connection = dataSource.getConnection()) {
             CredentialsDto credentialsDto = CredentialsDto.builder()
@@ -77,6 +78,7 @@ public class UserServiceTest {
                         .username(resultSet.getString("username"))
                         .password(resultSet.getString("password"))
                         .role(UserRoleEnum.valueOf(resultSet.getString("role")))
+                        .departments(List.of())
                         .build();
                 assertTrue(users.contains(userDto));
             }
@@ -85,7 +87,6 @@ public class UserServiceTest {
     }
 
     @Test
-    @Transactional
     public void findByUsername_ShouldReturnUser_WhenUserExists() throws Exception {
         try(Connection connection = dataSource.getConnection()) {
             CredentialsDto credentialsDto = CredentialsDto.builder()
@@ -105,7 +106,7 @@ public class UserServiceTest {
                         .username(resultSet.getString("username"))
                         .password(resultSet.getString("password"))
                         .role(UserRoleEnum.valueOf(resultSet.getString("role")))
-                        .departments(new ArrayList<>())
+                        .departments(List.of())
                         .build();
                 assertEquals(user.getId(), userDto.getId());
                 assertEquals(user.getUsername(), userDto.getUsername());
