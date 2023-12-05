@@ -1,13 +1,13 @@
 version: '3.1'
 
 services:
-  postgres:
+  postgres_medication:
     image: postgres:16
     env_file: .env
     environment:
       - POSTGRES_USER=$DB_USERNAME
       - POSTGRES_PASSWORD=$DB_PASSWORD
-      - POSTGRES_DB=coursework
+      - POSTGRES_DB=medication
     networks:
       - backend
     ports:
@@ -27,7 +27,7 @@ services:
   medication:
     build: medication
     depends_on:
-      - postgres
+      - postgres_medication
     networks:
       - backend
     ports:
@@ -36,7 +36,7 @@ services:
   hospital:
     build: hospital
     depends_on:
-      - postgres
+      - postgres_hospital
     networks:
       - backend
     ports:
